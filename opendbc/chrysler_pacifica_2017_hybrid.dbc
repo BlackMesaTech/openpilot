@@ -167,11 +167,11 @@ BO_ 671 AUTO_PARK_REQUEST: 8 XXX
  SG_ AUTO_PARK_CMD : 2|11@0+ (1,-1024) [0|1] "NM" XXX
 
 BO_ 678 DAS_6: 8 XXX
- SG_ Auto_High_Beam : 47|1@1+ (1,0) [0|0] "" XXX
  SG_ LKAS_ICON_COLOR : 1|2@0+ (1,0) [0|3] "" XXX
  SG_ LKAS_LANE_LINES : 19|4@0+ (1,0) [0|1] "" XXX
  SG_ LKAS_ALERTS : 27|4@0+ (1,0) [0|1] "" XXX
  SG_ CAR_MODEL : 15|8@0+ (1,0) [0|255] "" XXX
+ SG_ LKAS_Disabled : 56|1@1+ (1,0) [0|0] "" XXX //need to confirm
 
 BO_ 705 AUTO_PARK_BUTTON: 8 XXX
  SG_ AUTO_PARK_TOGGLE_2 : 8|1@0+ (1,0) [0|1] "" XXX

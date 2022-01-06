@@ -47,7 +47,6 @@ class CarState(CarStateBase):
   # cruise state  
     self.steer_command_bit = cp_cam.vl["LKAS_COMMAND"]['LKAS_CONTROL_BIT'] 
     self.lkas_counter = cp_cam.vl["LKAS_COMMAND"]["COUNTER"]
-    self.autoHighBeamBit = cp_cam.vl["DAS_6"]['Auto_High_Beam'] #Auto High Beam isn't Located in this message on chrysler or jeep currently located in 729 message
     self.lanelines = cp_cam.vl["DAS_6"]["LKAS_LANE_LINES"]
     self.iconcolor = cp_cam.vl["DAS_6"]["LKAS_ICON_COLOR"]
     self.lkas_car_model = cp_cam.vl["DAS_6"]["CAR_MODEL"] 
@@ -77,9 +76,10 @@ class CarState(CarStateBase):
       # ACC_Activation_Status is a three bit msg, 0 is off, 1 and 2 are Non-ACC mode, 3 and 4 are ACC mode
       ret.cruiseState.available = cp_cam.vl["DAS_4"]['ACC_Activation_Status'] in [3, 4]  #3 ACCOn and 4 ACCSet
       ret.cruiseState.nonAdaptive = cp_cam.vl["DAS_4"]["ACC_Activation_Status"] in [1, 2] #1 NormalCCOn and 2 NormalCCSet
+      self.autoHighBeamBit = cp_cam.vl["DAS_6"]['Auto_High_Beam'] #Auto High Beam isn't Located in this message on chrysler or jeep currently located in 729 message
       #ret.cruiseState.speedOffset = ret.cruiseState.speed - ret.vEgo
       self.dashboard = cp_cam.vl["DAS_4"]
-      ret.steerError = cp_cam.vl["LKAS_COMMAND"]["LKAS_ERROR"]==1
+      ret.steerError = cp_cam.vl["LKAS_COMMAND"]["LKAS_ERROR"]==1 # TODO: Find another bit to determine the steer error
 
 
   # gear
@@ -205,6 +205,7 @@ class CarState(CarStateBase):
         ("ACC_Engaged", "DAS_3", 0),#ACC Engaged
         ("ACC_Set_Speed", "DAS_4", -1),
         ("ACC_Activation_Status", "DAS_4", -1),
+        ("Auto_High_Beam", "DAS_6", -1),
       ]
       checks += [
         ("DAS_3", 50),

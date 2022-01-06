@@ -1,15 +1,20 @@
 from cereal import car
 from selfdrive.car import make_can_msg
+from selfdrive.car.chrysler.values import CAR
 
 
 GearShifter = car.CarState.GearShifter
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 
-def create_lkas_hud(packer, lkas_active, hud_alert, hud_count, CS):
+def create_lkas_hud(packer, lkas_active, hud_alert, hud_count, CS, fingerprint):
   # LKAS_HUD 0x2a6 (678) Controls what lane-keeping icon is displayed.
 
   if hud_alert in [VisualAlert.steerRequired, VisualAlert.ldw]:
-    msg = b'\x00\x00\x00\x03\x00\x00\x00\x00'
+    if fingerprint in (CAR.RAM_1500, CAR.RAM_2500):
+      msg = b'\x00\x00\x03\x00\x00\x00\x00\x00'
+    else:
+      msg = b'\x00\x00\x00\x03\x00\x00\x00\x00'
+
     return make_can_msg(0x2a6, msg, 0)
 
   color = 1  # default values are for park or neutral in 2017 are 0 0, but trying 1 1 for 2019
@@ -27,20 +32,38 @@ def create_lkas_hud(packer, lkas_active, hud_alert, hud_count, CS):
     else:
       color = 1  # control off, display white.
       lines = 1
-  if CS.lkasdisabled ==1:
+  if CS.lkasdisabled == 1:
     color = 0
     lines = 0
     alerts = 0
 
+  #if hud_alert in [VisualAlert.steerRequired, VisualAlert.ldw]: #possible use this instead
+  #  color = 0
+  #  lines = 0
+  #  alerts = 3
+  #  CS.lkas_car_model = 0
+  #  CS.lkasdisabled = 0
 
-  values = {
-    "LKAS_ICON_COLOR": color,  # byte 0, last 2 bits
-    "CAR_MODEL": CS.lkas_car_model,  # byte 1
-    "LKAS_LANE_LINES": lines,  # byte 2, last 4 bits
-    "LKAS_ALERTS": alerts,  # byte 3, last 4 bits
-    "Auto_High_Beam": CS.autoHighBeamBit,
-    "LKAS_Disabled":CS.lkasdisabled,
+  if fingerprint in (CAR.RAM_1500, CAR.RAM_2500):
+    values = {
+      "Auto_High_Beam": CS.autoHighBeamBit,
+      "LKAS_ICON_COLOR": color,  # byte 0, last 2 bits
+      "CAR_MODEL": CS.lkas_car_model,  # byte 1
+      "LKAS_LANE_LINES": lines,  # byte 2, last 4 bits
+      "LKAS_ALERTS": alerts,  # byte 3, last 4 bits
+      "LKAS_Disabled":CS.lkasdisabled,
     }
+
+  else:
+    values = {
+      "LKAS_ICON_COLOR": color,  # byte 0, last 2 bits
+      "CAR_MODEL": CS.lkas_car_model,  # byte 1
+      "LKAS_LANE_LINES": lines,  # byte 2, last 4 bits
+      "LKAS_ALERTS": alerts,  # byte 3, last 4 bits 
+      "LKAS_Disabled":CS.lkasdisabled,
+      }
+
+  
 
   return packer.make_can_msg("DAS_6", 0, values)  # 0x2a6
 
