@@ -63,6 +63,7 @@ class CarState(CarStateBase):
       self.dashboard = cp.vl["DAS_4"]  
       self.steer_state = cp.vl["EPS_2"]["Torque_Overlay_Status"]
       ret.steerError = self.steer_state == 4 or (self.steer_state == 0 and ret.vEgo > self.CP.minSteerSpeed)
+      self.ccbuttoncounter = cp.vl["Cruise_Control_Buttons"]["COUNTER"]
       
     if self.CP.carFingerprint in (CAR.RAM_1500, CAR.RAM_2500):
       self.lkasbutton = (cp.vl["Center_Stack_2"]["LKAS_Button"] == 1)
@@ -130,6 +131,7 @@ class CarState(CarStateBase):
       ("ACC_Accel", "Cruise_Control_Buttons", 0),#ACC Accel Button
       ("ACC_Decel", "Cruise_Control_Buttons", 0),#ACC Decel Button
       ("ACC_Cancel", "Cruise_Control_Buttons", 0),#ACC Cancel Button
+      ("COUNTER", "Cruise_Control_Buttons", 0),#ACC Cancel Button
       ("ACC_Distance_Inc", "Cruise_Control_Buttons", 0),#ACC Distance Increase Button
       ("Driver_Door_Ajar", "BCM_1", 0),#driver Door
       ("Passenger_Door_Ajar", "BCM_1", 0),#Passenger Door
