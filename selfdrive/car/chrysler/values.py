@@ -67,6 +67,7 @@ FW_VERSIONS = {
     (Ecu.fwdCamera, 0x764, None): [
       b'\xf1\x3204672631AC'
     ],
+  },
   CAR.RAM_2500: {
     (Ecu.engine, 0x7e0, None): [
       b'\xf1\x9400000000XX',  # placeholder
