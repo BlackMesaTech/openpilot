@@ -73,10 +73,10 @@ FW_VERSIONS = {
       b'\xf1\x9400000000XX',  # placeholder
     ],
     (Ecu.eps, 0x761, None): [
-      b'\xf1\x3268321646AC',
+      b'\xf1\x3200000000XX',
     ],
     (Ecu.fwdCamera, 0x753, None): [
-      b'\xf1\x3204672631AC'
+      b'\xf1\x3200000000XX'
     ],
   },
 }
