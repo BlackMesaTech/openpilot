@@ -96,6 +96,12 @@ FW_VERSIONS = {
     (Ecu.esp, 0x747, None): [
       b'\xf1\x3200000000XX'
     ],
+    (Ecu.combinationMeter, 0x742, None): [
+      b'\xf1\x3200000000XX'
+    ],
+    (Ecu.gateway, 0x18DACBF1, None): [
+      b'\xf1\x3200000000XX'
+    ],
   },
 }
 
