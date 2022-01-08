@@ -57,6 +57,7 @@ FW_VERSIONS = {
       b'\xf1\x3200000000XX'
     ],
   },
+
   CAR.JEEP_CHEROKEE: {
     (Ecu.engine, 0x7e0, None): [
       b'\xf1\x9400000000XX',  # placeholder
@@ -80,6 +81,31 @@ FW_VERSIONS = {
       b'\xf1\x3200000000XX'
     ],
   },
+
+  CAR.RAM_1500: {
+    (Ecu.engine, 0x7e0, None): [
+      b'\xf1\x3200000000XX'  # placeholder
+    ],
+    (Ecu.eps, 0x75A, None): [
+      b'\xf1\x3200000000XX'
+    ],
+    (Ecu.fwdCamera, 0x753, None): [
+      b'\xf1\x3200000000XX'
+    ],
+    (Ecu.srs, 0x744, None): [
+      b'\xf1\x3200000000XX'
+    ],
+    (Ecu.esp, 0x747, None): [
+      b'\xf1\x3200000000XX'
+    ],
+    (Ecu.combinationMeter, 0x742, None): [
+      b'\xf1\x3200000000XX'
+    ],
+    (Ecu.gateway, 0x18DACBF1, None): [
+      b'\xf1\x3200000000XX'
+    ],
+  },
+
   CAR.RAM_2500: {
     (Ecu.engine, 0x7e0, None): [
       b'\xf12M2370131MB'  # placeholder
