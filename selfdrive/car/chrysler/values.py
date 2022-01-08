@@ -86,6 +86,9 @@ FW_VERSIONS = {
     (Ecu.engine, 0x7e0, None): [
       b'\xf1\x3200000000XX'  # placeholder
     ],
+    (Ecu.transmission, 0x7e1, None): [
+      b'\xf1\x3200000000XX',  # placeholder
+    ],
     (Ecu.eps, 0x75A, None): [
       b'\xf1\x3200000000XX'
     ],
@@ -109,6 +112,9 @@ FW_VERSIONS = {
   CAR.RAM_2500: {
     (Ecu.engine, 0x7e0, None): [
       b'\xf12M2370131MB'  # placeholder
+    ],
+    (Ecu.transmission, 0x7e1, None): [
+      b'\xf1\x3200000000XX',  # placeholder
     ],
     (Ecu.eps, 0x761, None): [
       b'\xf1268507906AB'
