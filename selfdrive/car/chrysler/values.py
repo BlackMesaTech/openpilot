@@ -50,6 +50,12 @@ FW_VERSIONS = {
     (Ecu.fwdCamera, 0x764, None): [
       b'\xf1\x3268493395AA'
     ],
+    (Ecu.orc, 0x744, None): [
+      b'\xf1\x3200000000XX'
+    ],
+    (Ecu.abs, 0x747, None): [
+      b'\xf1\x3200000000XX'
+    ],
   },
   CAR.JEEP_CHEROKEE: {
     (Ecu.engine, 0x7e0, None): [
@@ -67,6 +73,12 @@ FW_VERSIONS = {
     (Ecu.fwdCamera, 0x764, None): [
       b'\xf1\x3204672631AC'
     ],
+    (Ecu.orc, 0x744, None): [
+      b'\xf1\x3200000000XX'
+    ],
+    (Ecu.abs, 0x747, None): [
+      b'\xf1\x3200000000XX'
+    ],
   },
   CAR.RAM_2500: {
     (Ecu.engine, 0x7e0, None): [
@@ -76,6 +88,12 @@ FW_VERSIONS = {
       b'\xf1\x3200000000XX',
     ],
     (Ecu.fwdCamera, 0x753, None): [
+      b'\xf1\x3200000000XX'
+    ],
+    (Ecu.orc, 0x744, None): [
+      b'\xf1\x3200000000XX'
+    ],
+    (Ecu.abs, 0x747, None): [
       b'\xf1\x3200000000XX'
     ],
   },
