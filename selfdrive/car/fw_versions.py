@@ -98,19 +98,6 @@ CHRYSLER_RX_OFFSET = -0x280
 
 # brand, request, response, response offset
 REQUESTS = [
-  # Chrysler / FCA / Stellantis
-  (
-    "chrysler",
-    [CHRYSLER_VERSION_REQUEST],
-    [CHRYSLER_VERSION_RESPONSE],
-    CHRYSLER_RX_OFFSET,
-  ),
-  (
-    "chrysler",
-    [CHRYSLER_VERSION_REQUEST],
-    [CHRYSLER_VERSION_RESPONSE],
-    DEFAULT_RX_OFFSET,
-  ),
   # Subaru
   (
     "subaru",
@@ -195,6 +182,19 @@ REQUESTS = [
     [NISSAN_VERSION_REQUEST_STANDARD],
     [NISSAN_VERSION_RESPONSE_STANDARD],
     NISSAN_RX_OFFSET,
+  ),
+    # Chrysler / FCA / Stellantis
+  (
+    "chrysler",
+    [CHRYSLER_VERSION_REQUEST],
+    [CHRYSLER_VERSION_RESPONSE],
+    CHRYSLER_RX_OFFSET,
+  ),
+  (
+    "chrysler",
+    [CHRYSLER_VERSION_REQUEST],
+    [CHRYSLER_VERSION_RESPONSE],
+    DEFAULT_RX_OFFSET,
   ),
 ]
 
