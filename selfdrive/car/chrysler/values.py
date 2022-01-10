@@ -110,17 +110,8 @@ FW_VERSIONS = {
   },
 
   CAR.RAM_2500: {
-    (Ecu.engine, 0x7e0, None): [
-      b'2M2370131MB'  # placeholder
-    ],
-    #(Ecu.transmission, 0x7e1, None): [
-    #  b'\xf1\x3200000000XX',  # placeholder
-    #],
-    (Ecu.eps, 0x761, None): [
-      b'68507906AB'
-    ],
-    (Ecu.fwdCamera, 0x753, None): [
-      b'68484694AE'
+    (Ecu.combinationMeter, 0x742, None): [
+      b'68492693AD'
     ],
     (Ecu.srs, 0x744, None): [
       b'68428503AA'
@@ -128,9 +119,18 @@ FW_VERSIONS = {
     (Ecu.esp, 0x747, None): [
       b'68504022AB'
     ],
-    (Ecu.combinationMeter, 0x742, None): [
-      b'68492693AD'
+    (Ecu.fwdCamera, 0x753, None): [
+      b'68484694AE'
     ],
+    (Ecu.eps, 0x761, None): [
+      b'68507906AB'
+    ],
+    (Ecu.engine, 0x7e0, None): [
+      b'2M2370131MB'  # placeholder
+    ],
+    #(Ecu.transmission, 0x7e1, None): [
+    #  b'\xf1\x3200000000XX',  # placeholder
+    #],
     (Ecu.gateway, 0x18DACBF1, None): [
       b'68488419AB'
     ],
