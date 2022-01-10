@@ -111,7 +111,7 @@ FW_VERSIONS = {
 
   CAR.RAM_2500: {
     (Ecu.combinationMeter, 0x742, None): [
-      b'68492693AD'
+      b'M2370131MB'
     ],
     (Ecu.srs, 0x744, None): [
       b'68428503AA'
