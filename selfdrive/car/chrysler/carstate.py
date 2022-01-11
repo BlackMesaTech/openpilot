@@ -51,6 +51,7 @@ class CarState(CarStateBase):
     self.iconcolor = cp_cam.vl["DAS_6"]["LKAS_ICON_COLOR"]
     self.lkas_car_model = cp_cam.vl["DAS_6"]["CAR_MODEL"] 
     self.lkasalerts = cp_cam.vl["DAS_6"]["LKAS_ALERTS"]
+    self.ccbuttoncounter = cp.vl["Cruise_Control_Buttons"]["COUNTER"]
 
 
     if self.CP.carFingerprint in (CAR.PACIFICA_2017_HYBRID, CAR.PACIFICA_2018_HYBRID, CAR.PACIFICA_2019_HYBRID, CAR.PACIFICA_2018, CAR.PACIFICA_2020, CAR.JEEP_CHEROKEE_2019, CAR.JEEP_CHEROKEE):
@@ -63,7 +64,6 @@ class CarState(CarStateBase):
       self.dashboard = cp.vl["DAS_4"]  
       self.steer_state = cp.vl["EPS_2"]["Torque_Overlay_Status"]
       ret.steerError = self.steer_state == 4 or (self.steer_state == 0 and ret.vEgo > self.CP.minSteerSpeed)
-      self.ccbuttoncounter = cp.vl["Cruise_Control_Buttons"]["COUNTER"]
       
     if self.CP.carFingerprint in (CAR.RAM_1500, CAR.RAM_2500):
       self.lkasbutton = (cp.vl["Center_Stack_2"]["LKAS_Button"] == 1)
