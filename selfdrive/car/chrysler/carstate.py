@@ -191,15 +191,10 @@ class CarState(CarStateBase):
       ("LKAS_Disabled", "DAS_6", -1),
       ("CAR_MODEL", "DAS_6", -1),
       ("LKAS_ALERTS", "DAS_6", -1),
-      ("ACC_Engaged", "DAS_3", 0),#ACC Engaged
-      ("ACC_Set_Speed", "DAS_4", -1),
-      ("ACC_Activation_Status", "DAS_4", -1),
     ]
     checks = [
       ("LKAS_COMMAND", 50),
       ("DAS_6", 15),
-      ("DAS_3", 50),
-      ("DAS_4", 50),
     ]
 
     if CP.carFingerprint in (CAR.RAM_1500, CAR.RAM_2500):
