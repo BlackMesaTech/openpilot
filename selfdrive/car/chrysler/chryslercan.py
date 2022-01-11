@@ -78,14 +78,15 @@ def create_lkas_command(packer, apply_steer, moving_fast, frame):
   return packer.make_can_msg("LKAS_COMMAND", 0, values)
 
 
-def create_wheel_buttons(packer, CS, fingerprint, cancel = False):
+def create_wheel_buttons(packer, frame, fingerprint, cancel = False):
   # Cruise_Control_Buttons Message sent to cancel ACC.
-  frame = CS.ccbuttoncounter + 1
   values = {
     "ACC_Cancel": cancel,
     "COUNTER": frame
   }
   if fingerprint in (CAR.RAM_1500, CAR.RAM_2500):
-    return packer.make_can_msg("Cruise_Control_Buttons", 2, values)
+    bus = 2
   else:
-    return packer.make_can_msg("Cruise_Control_Buttons", 0, values)
+    bus = 0 
+
+  return packer.make_can_msg("Cruise_Control_Buttons", bus, values)
