@@ -5,12 +5,12 @@ from selfdrive.car.chrysler.values import CAR, CarControllerParams, STEER_MAX_LO
 from opendbc.can.packer import CANPacker
 
 class CarController():
-  def __init__(self, dbc_name, CP, CS, VM):
+  def __init__(self, dbc_name, CP, VM):
     self.apply_steer_last = 0
     #self.ccframe = 0
     self.prev_frame = -1
     self.hud_count = 0
-    #self.car_fingerprint = CP.carFingerprint
+    self.car_fingerprint = CP.carFingerprint
     self.gone_fast_yet = False
     self.steer_rate_limited = False
     self.lkasdisabled = 0
@@ -18,9 +18,9 @@ class CarController():
     self.lkaslast_frame = 0.
     self.gone_fast_yet_previous = False
     #self.CarControllerParams = CarControllerParams
-    CarControllerParams.STEER_MAX = STEER_MAX_LOOKUP.get(CS.CP.carFingerprint, 1.)
-    CarControllerParams.STEER_DELTA_UP = STEER_DELTA_UP.get(CS.CP.carFingerprint, 1.) 
-    CarControllerParams.STEER_DELTA_DOWN = STEER_DELTA_DOWN.get(CS.CP.carFingerprint, 1.) 
+    CarControllerParams.STEER_MAX = STEER_MAX_LOOKUP.get(CP.carFingerprint, 1.)
+    CarControllerParams.STEER_DELTA_UP = STEER_DELTA_UP.get(CP.carFingerprint, 1.) 
+    CarControllerParams.STEER_DELTA_DOWN = STEER_DELTA_DOWN.get(CP.carFingerprint, 1.) 
 
     self.packer = CANPacker(dbc_name)
 
@@ -41,14 +41,14 @@ class CarController():
     #moving_fast = CS.out.vEgo > CS.CP.minSteerSpeed  # for status message
     #lkas_active = moving_fast and enabled
 
-    if CS.CP.carFingerprint not in (CAR.RAM_1500, CAR.RAM_2500):
+    if self.car_fingerprint not in (CAR.RAM_1500, CAR.RAM_2500):
       if CS.out.vEgo > (CS.CP.minSteerSpeed - 0.5):  # for command high bit
         self.gone_fast_yet = True
-      elif CS.CP.carFingerprint in (CAR.PACIFICA_2019_HYBRID, CAR.PACIFICA_2020, CAR.JEEP_CHEROKEE_2019):
+      elif self.car_fingerprint in (CAR.PACIFICA_2019_HYBRID, CAR.PACIFICA_2020, CAR.JEEP_CHEROKEE_2019):
         if CS.out.vEgo < (CS.CP.minSteerSpeed - 3.0):
           self.gone_fast_yet = False  # < 14.5m/s stock turns off this bit, but fine down to 13.5
           
-    elif CS.CP.carFingerprint in (CAR.RAM_1500, CAR.RAM_2500):
+    elif self.car_fingerprint in (CAR.RAM_1500, CAR.RAM_2500):
       if CS.out.vEgo > (CS.CP.minSteerSpeed):  # for command high bit
         self.gone_fast_yet = True
       elif CS.out.vEgo < (CS.CP.minSteerSpeed - 0.5):
@@ -78,9 +78,8 @@ class CarController():
     #*** control msgs ***
 
     if pcm_cancel_cmd:
-    #if not enabled and CS.out.cruiseState.enabled: #not sure which is best
       # TODO: would be better to start from frame_2b3
-      new_msg = create_wheel_buttons(self.packer, CS.ccbuttoncounter + 1, CS.CP.carFingerprint, cancel=True)
+      new_msg = create_wheel_buttons(self.packer, CS.ccbuttoncounter + 1, self.car_fingerprint, cancel=True)
       can_sends.append(new_msg)
 
     # LKAS_HEARTBIT is forwarded by Panda so no need to send it here.
@@ -88,7 +87,7 @@ class CarController():
     if (self.lkasframe % 25 == 0):  # 0.25s period
       if (CS.lkas_car_model != -1):
         new_msg = create_lkas_hud(
-            self.packer, lkas_active, hud_alert, self.hud_count, CS, CS.CP.carFingerprint)
+            self.packer, lkas_active, hud_alert, self.hud_count, CS, self.car_fingerprint)
         can_sends.append(new_msg)
         self.hud_count += 1
 
