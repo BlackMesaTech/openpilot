@@ -84,4 +84,4 @@ def create_wheel_buttons(packer, frame, cancel = False):
     "ACC_Cancel": cancel,
     "COUNTER": frame
   }
-  return packer.make_can_msg("Cruise_Control_Buttons", 0, values)
+  return packer.make_can_msg("Cruise_Control_Buttons", 2, values)
