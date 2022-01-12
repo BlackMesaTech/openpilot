@@ -120,7 +120,7 @@ BO_ 250 DAS_6: 8 XXX
  SG_ LKAS_LANE_LINES : 11|4@0+ (1,0) [0|15] "" XXX
  SG_ LKAS_ICON_COLOR : 51|4@0+ (1,0) [0|15] "" XXX
  SG_ LKAS_Disabled : 56|1@1+ (1,0) [0|0] "" XXX
- SG_ CAR_MODEL : 15|8@0+ (1,0) [0|255] "" XXX
+ SG_ CAR_MODEL : 19|4@0+ (1,0) [0|255] "" XXX
  SG_ LKAS_ALERTS : 35|4@0+ (1,0) [0|1] "" XXX
 
 BO_ 464 ORC_1: 8 XXX
