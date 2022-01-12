@@ -99,12 +99,13 @@ def create_lkas_command(packer, apply_steer, moving_fast, frame):
 def create_wheel_buttons(packer, CS, fingerprint, cancel = False):
   # Cruise_Control_Buttons Message sent to cancel ACC.
   frame = CS.ccbuttoncounter + 1
-  #if fingerprint not in (CAR.RAM_2500): #Ram HD resume and + share the same button however, the bit could still work in the cruise message Untested
-    #acc_resume = CS.out.cruiseState.standstill
+  acc_resume = 0
+  if fingerprint not in (CAR.RAM_2500): #Ram HD resume and + share the same button however, the bit could still work in the cruise message Untested
+    acc_resume = CS.out.cruiseState.standstill
   values = {
     "ACC_Cancel": cancel,
     "COUNTER": frame,
-    #"ACC_Resume": acc_resume,
+    "ACC_Resume": acc_resume,
   }
   if fingerprint in (CAR.RAM_1500, CAR.RAM_2500):
     bus = 2
