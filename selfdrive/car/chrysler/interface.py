@@ -49,7 +49,7 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kpBP, ret.lateralTuning.pid.kiBP = [[0.], [0.,]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.15], [0.015,]]
       ret.steerActuatorDelay = 0.1
-      ret.steerRateCost = 0.7  # may need tuning
+      ret.steerRateCost = 0.5  # may need tuning
       ret.centerToFront = ret.wheelbase * 0.38 # calculated from 100% - (front axle weight/total weight)
       ret.minSteerSpeed = 16
 
