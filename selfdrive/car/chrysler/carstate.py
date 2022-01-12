@@ -56,6 +56,7 @@ class CarState(CarStateBase):
 
     if self.CP.carFingerprint in (CAR.PACIFICA_2017_HYBRID, CAR.PACIFICA_2018_HYBRID, CAR.PACIFICA_2019_HYBRID, CAR.PACIFICA_2018, CAR.PACIFICA_2020, CAR.JEEP_CHEROKEE_2019, CAR.JEEP_CHEROKEE):
       ret.cruiseState.enabled = cp.vl["DAS_3"]["ACC_Engaged"] == 1  # ACC is green.
+      ret.cruiseState.standstill = cp.vl["DAS_3"]["ACC_StandStill"] == 1
       ret.cruiseState.speed = cp.vl["DAS_4"]["ACC_Set_Speed"] * CV.KPH_TO_MS
       # ACC_Activation_Status is a three bit msg, 0 is off, 1 and 2 are Non-ACC mode, 3 and 4 are ACC mode
       ret.cruiseState.available = cp.vl["DAS_4"]['ACC_Activation_Status'] in [3, 4]  #3 ACCOn and 4 ACCSet
@@ -74,6 +75,7 @@ class CarState(CarStateBase):
         self.lkasdisabled = 0
       self.lkasbuttonprev = self.lkasbutton
       ret.cruiseState.enabled = cp_cam.vl["DAS_3"]["ACC_Engaged"] == 1  and self.lkasdisabled == 0 # ACC is green.
+      ret.cruiseState.standstill = cp_cam.vl["DAS_3"]["ACC_StandStill"] == 1
       ret.cruiseState.speed = cp_cam.vl["DAS_4"]["ACC_Set_Speed"] * CV.KPH_TO_MS
       # ACC_Activation_Status is a three bit msg, 0 is off, 1 and 2 are Non-ACC mode, 3 and 4 are ACC mode
       ret.cruiseState.available = cp_cam.vl["DAS_4"]['ACC_Activation_Status'] in [3, 4]  #3 ACCOn and 4 ACCSet
@@ -169,6 +171,7 @@ class CarState(CarStateBase):
     if CP.carFingerprint in (CAR.PACIFICA_2017_HYBRID, CAR.PACIFICA_2018_HYBRID, CAR.PACIFICA_2019_HYBRID, CAR.PACIFICA_2018, CAR.PACIFICA_2020, CAR.JEEP_CHEROKEE_2019, CAR.JEEP_CHEROKEE):
       signals += [
         ("ACC_Engaged", "DAS_3", 0),#ACC Engaged
+        ("ACC_StandStill", "DAS_3", 0),#ACC Engaged
         ("ACC_Set_Speed", "DAS_4", -1),
         ("ACC_Activation_Status", "DAS_4", -1),
         ("LKAS_Button", "Center_Stack_1", 0),#LKAS Button
@@ -205,6 +208,7 @@ class CarState(CarStateBase):
     if CP.carFingerprint in (CAR.RAM_1500, CAR.RAM_2500):
       signals += [
         ("ACC_Engaged", "DAS_3", 0),#ACC Engaged
+        ("ACC_StandStill", "DAS_3", 0),#ACC Engaged
         ("ACC_Set_Speed", "DAS_4", -1),
         ("ACC_Activation_Status", "DAS_4", -1),
         ("Auto_High_Beam", "DAS_6", -1),
