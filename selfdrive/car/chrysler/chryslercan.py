@@ -99,12 +99,9 @@ def create_lkas_command(packer, apply_steer, moving_fast, frame):
   return packer.make_can_msg("LKAS_COMMAND", 0, values)
 
 
-def create_wheel_buttons(packer, CS, fingerprint, cancel = False):
+def create_wheel_buttons(packer, CS, fingerprint, cancel = False, acc_resume = False):
   # Cruise_Control_Buttons Message sent to cancel ACC.
   frame = CS.ccbuttoncounter + 1
-  acc_resume = 0
-  if fingerprint not in (CAR.RAM_2500) and cancel == False: #Ram HD resume and + share the same button however, the bit could still work in the cruise message Untested
-    acc_resume = CS.out.cruiseState.standstill
   values = {
     "ACC_Cancel": cancel,
     "COUNTER": frame,
