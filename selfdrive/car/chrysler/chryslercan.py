@@ -9,12 +9,12 @@ VisualAlert = car.CarControl.HUDControl.VisualAlert
 def create_lkas_hud(packer, lkas_active, hud_alert, hud_count, CS, fingerprint):
   # LKAS_HUD 0x2a6 (678) Controls what lane-keeping icon is displayed.
 
-  #if hud_alert in [VisualAlert.steerRequired]:
-  #  if fingerprint in (CAR.RAM_1500, CAR.RAM_2500):
-  #    msg = b'\x00\x00\x03\x00\x00\x00\x00\x00'
-  #  else:
-  #    msg = b'\x00\x00\x00\x03\x00\x00\x00\x00'
-  #  return make_can_msg(0x2a6, msg, 0)
+  if hud_alert in [VisualAlert.steerRequired]:
+    if fingerprint in (CAR.RAM_1500, CAR.RAM_2500):
+      msg = b'\x00\x00\x00\x00\x03\x00\x00\x00'
+    else:
+      msg = b'\x00\x00\x00\x03\x00\x00\x00\x00'
+    return make_can_msg(0x2a6, msg, 0)
   lkasdisabled = CS.lkasdisabled
   color = 1  # default values are for park or neutral in 2017 are 0 0, but trying 1 1 for 2019
   lines = 1
@@ -45,8 +45,8 @@ def create_lkas_hud(packer, lkas_active, hud_alert, hud_count, CS, fingerprint):
       alerts = 7
     else:
       color = 1  # control off, display white.
-      lines = 1
-      alerts = 3
+      lines = 0
+      alerts = 7
   if CS.lkasdisabled == 1:
     color = 0
     lines = 0
@@ -83,7 +83,7 @@ def create_lkas_hud(packer, lkas_active, hud_alert, hud_count, CS, fingerprint):
 
   
 
-  return packer.make_can_msg("DAS_6", 0, values)  # 0x2a6
+  return packer.make_can_msg("DAS_6", 0, values)
 
 
 def create_lkas_command(packer, apply_steer, moving_fast, frame):
