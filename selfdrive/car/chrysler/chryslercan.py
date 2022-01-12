@@ -14,7 +14,7 @@ def create_lkas_hud(packer, lkas_active, hud_alert, hud_count, CS, fingerprint):
       msg = b'\x00\x00\x0F\x00\x00\x00\x00\x00'
     else:
       msg = b'\x00\x00\x00\x03\x00\x00\x00\x00'
-    return make_can_msg(0x2a6, msg, 0)
+    return make_can_msg("DAS_6", msg, 0)
   lkasdisabled = CS.lkasdisabled
   color = 1  # default values are for park or neutral in 2017 are 0 0, but trying 1 1 for 2019
   lines = 1
