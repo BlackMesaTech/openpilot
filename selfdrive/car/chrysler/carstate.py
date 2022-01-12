@@ -64,6 +64,7 @@ class CarState(CarStateBase):
       self.dashboard = cp.vl["DAS_4"]  
       self.steer_state = cp.vl["EPS_2"]["Torque_Overlay_Status"]
       ret.steerError = self.steer_state == 4 or (self.steer_state == 0 and ret.vEgo > self.CP.minSteerSpeed)
+      self.lkasbutton = (cp.vl["Center_Stack_1"]["LKAS_Button"] == 1)
       
     if self.CP.carFingerprint in (CAR.RAM_1500, CAR.RAM_2500):
       self.lkasbutton = (cp.vl["Center_Stack_2"]["LKAS_Button"] == 1)
@@ -125,7 +126,6 @@ class CarState(CarStateBase):
       ("EPS_Motor_Torque", "EPS_2", 0),#EPS Motor Torque output
       ("Torque_Overlay_Status", "EPS_2", 1),
       ("Traction_Button", "Center_Stack_1", 0),#Traction Control Button
-      ("LKAS_Button", "Center_Stack_2", 0),#LKAS Button
       ("Turn_Signal_Status", "Steering_Column_Commands", 0),#Blinker 
       ("High_Beam_Lever_Status", "Steering_Column_Commands", 0),#High Beam Lever
       ("ACC_Accel", "Cruise_Control_Buttons", 0),#ACC Accel Button
@@ -171,9 +171,15 @@ class CarState(CarStateBase):
         ("ACC_Engaged", "DAS_3", 0),#ACC Engaged
         ("ACC_Set_Speed", "DAS_4", -1),
         ("ACC_Activation_Status", "DAS_4", -1),
+        ("LKAS_Button", "Center_Stack_1", 0),#LKAS Button
       ]
       checks += [("DAS_3", 50),
         ("DAS_4", 50),]
+
+    if CP.carFingerprint in (CAR.RAM_1500, CAR.RAM_2500):
+      signals += [
+        ("LKAS_Button", "Center_Stack_2", 0),#LKAS Button
+      ]
 
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
@@ -185,7 +191,6 @@ class CarState(CarStateBase):
       ("LKAS_CONTROL_BIT", "LKAS_COMMAND", 0),
       ("COUNTER", "LKAS_COMMAND", 0),
       ("LKAS_ERROR", "LKAS_COMMAND", 0),
-      ("Auto_High_Beam", "DAS_6", -1), 
       ("LKAS_LANE_LINES", "DAS_6", -1),
       ("LKAS_ICON_COLOR", "DAS_6", -1),
       ("LKAS_Disabled", "DAS_6", -1),
