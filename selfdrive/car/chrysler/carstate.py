@@ -180,8 +180,10 @@ class CarState(CarStateBase):
         ("ACC_Activation_Status", "DAS_4", -1),
         ("LKAS_Button", "Center_Stack_1", 0),#LKAS Button
       ]
-      checks += [("DAS_3", 50),
-        ("DAS_4", 50),]
+      checks += [
+        ("DAS_3", 50),
+        ("DAS_4", 50),
+        ]
 
     if CP.carFingerprint in (CAR.RAM_1500, CAR.RAM_2500):
       signals += [
