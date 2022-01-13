@@ -55,7 +55,13 @@ class CarState(CarStateBase):
 
 
     if self.CP.carFingerprint in (CAR.PACIFICA_2017_HYBRID, CAR.PACIFICA_2018_HYBRID, CAR.PACIFICA_2019_HYBRID, CAR.PACIFICA_2018, CAR.PACIFICA_2020, CAR.JEEP_CHEROKEE_2019, CAR.JEEP_CHEROKEE):
-      ret.cruiseState.enabled = cp.vl["DAS_3"]["ACC_Engaged"] == 1  # ACC is green.
+      self.lkasbutton = (cp.vl["Center_Stack_1"]["LKAS_Button"] == 1)
+      #if self.lkasbutton ==1 and self.lkasdisabled== 0 and self.lkasbuttonprev == 0:
+      #  self.lkasdisabled = 1
+      #elif self.lkasbutton ==1 and self.lkasdisabled== 1 and self.lkasbuttonprev == 0:
+      #  self.lkasdisabled = 0
+      self.lkasbuttonprev = self.lkasbutton
+      ret.cruiseState.enabled = cp.vl["DAS_3"]["ACC_Engaged"] == 1 # and self.lkasdisabled == 0 # ACC is green.
       ret.cruiseState.standstill = cp.vl["DAS_3"]["ACC_StandStill"] == 1
       ret.cruiseState.speed = cp.vl["DAS_4"]["ACC_Set_Speed"] * CV.KPH_TO_MS
       # ACC_Activation_Status is a three bit msg, 0 is off, 1 and 2 are Non-ACC mode, 3 and 4 are ACC mode
@@ -65,7 +71,6 @@ class CarState(CarStateBase):
       self.dashboard = cp.vl["DAS_4"]  
       self.steer_state = cp.vl["EPS_2"]["Torque_Overlay_Status"]
       ret.steerError = self.steer_state == 4 or (self.steer_state == 0 and ret.vEgo > self.CP.minSteerSpeed)
-      self.lkasbutton = (cp.vl["Center_Stack_1"]["LKAS_Button"] == 1)
       
     if self.CP.carFingerprint in (CAR.RAM_1500, CAR.RAM_2500):
       self.lkasbutton = (cp.vl["Center_Stack_2"]["LKAS_Button"] == 1)
@@ -154,7 +159,6 @@ class CarState(CarStateBase):
       ("Steering_Column_Angle_Status", 100),
       ("EPS_2", 100),
       ("Center_Stack_1", 1),
-      ("Center_Stack_2", 1),
       ("Steering_Column_Commands", 10),
       ("Cruise_Control_Buttons", 50),
       ("BCM_1", 1),
