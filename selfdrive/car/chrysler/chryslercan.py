@@ -101,27 +101,38 @@ def create_lkas_command(packer, apply_steer, moving_fast, frame):
 
 def create_wheel_buttons(packer, CS, fingerprint, pcm_cancel_cmd):
   # Cruise_Control_Buttons Message sent to cancel ACC.
-  cancel = CS.acccancel
-  acc_resume = CS.accresume
+  #cancel = CS.acccancel
+  #acc_resume = CS.accresume
 
-  if pcm_cancel_cmd:
+  if pcm_cancel_cmd or CS.acccancel:
     cancel = True
+  else:
+    cancel = False
   
-  elif CS.out.cruiseState.standstill:
+  if CS.out.cruiseState.standstill or CS.accresume:
     acc_resume = True
+  else:
+    acc_resume = False
 
-  frame = CS.ccbuttoncounter + 1
-  values = {
-    "ACC_Accel": CS.accaccel,
-    "ACC_Decel": CS.acccancel,
+
+ # values = {
+ #   "ACC_Accel": CS.accaccel,
+ #   "ACC_Decel": CS.acccancel,
+ #   "ACC_Cancel": cancel,
+ #   "ACC_Distance_Dec": CS.accdistancedec,
+ #   "ACC_Distance_Inc":CS.accdistanceinc,
+ #   "ACC_Resume": acc_resume,
+ #   "Cruise_OnOff":CS.cruiseonoff,
+ #   "ACC_OnOff":CS.acconoff,
+ #   "COUNTER": frame,
+ # }
+
+  values = CS.cruise
+  values.update({
     "ACC_Cancel": cancel,
-    "ACC_Distance_Dec": CS.accdistancedec,
-    "ACC_Distance_Inc":CS.accdistanceinc,
     "ACC_Resume": acc_resume,
-    "Cruise_OnOff":CS.cruiseonoff,
-    "ACC_OnOff":CS.acconoff,
-    "COUNTER": frame,
-  }
+  })
+  
   if fingerprint in (CAR.RAM_1500, CAR.RAM_2500):
     bus = 2
   else:
