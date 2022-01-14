@@ -273,7 +273,7 @@ static int chrysler_fwd_hook(int bus_num, CANPacket_t *to_fwd) {
 
 
   // forward CAN 0 -> 2 so stock LKAS camera sees messages
-  if (bus_num == 0U && (addr != Center_Stack_1) && (addr != Cruise_Control_Buttons_RAM) && (addr != Center_Stack_2_RAM)) {//Ram and HD share the same
+  if (bus_num == 0U && (addr != Center_Stack_1) && (addr != Cruise_Control_Buttons_RAM) && (addr != Cruise_Control_Buttons_HD) && (addr != Center_Stack_2_RAM)) {//Ram and HD share the same
     bus_fwd = 2;
   }
 
