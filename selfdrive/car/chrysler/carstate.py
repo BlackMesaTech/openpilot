@@ -51,8 +51,16 @@ class CarState(CarStateBase):
     self.iconcolor = cp_cam.vl["DAS_6"]["LKAS_ICON_COLOR"]
     self.lkas_car_model = cp_cam.vl["DAS_6"]["CAR_MODEL"] 
     self.lkasalerts = cp_cam.vl["DAS_6"]["LKAS_ALERTS"]
+    self.accaccel = cp.vl["Cruise_Control_Buttons"]["ACC_Accel"]
+    self.accdecel = cp.vl["Cruise_Control_Buttons"]["ACC_Decel"]
+    self.acccancel = cp.vl["Cruise_Control_Buttons"]["ACC_Cancel"]
+    self.accdistancedec = cp.vl["Cruise_Control_Buttons"]["ACC_Distance_Dec"]
+    self.accdistanceinc = cp.vl["Cruise_Control_Buttons"]["ACC_Distance_Inc"]
+    self.accresume = cp.vl["Cruise_Control_Buttons"]["ACC_Resume"]
+    self.cruiseonoff = cp.vl["Cruise_Control_Buttons"]["Cruise_OnOff"]
+    self.acconoff = cp.vl["Cruise_Control_Buttons"]["ACC_OnOff"]
     self.ccbuttoncounter = cp.vl["Cruise_Control_Buttons"]["COUNTER"]
-
+    
 
     if self.CP.carFingerprint in (CAR.PACIFICA_2017_HYBRID, CAR.PACIFICA_2018_HYBRID, CAR.PACIFICA_2019_HYBRID, CAR.PACIFICA_2018, CAR.PACIFICA_2020, CAR.JEEP_CHEROKEE_2019, CAR.JEEP_CHEROKEE):
       self.lkasbutton = (cp.vl["Center_Stack_1"]["LKAS_Button"] == 1)
@@ -138,7 +146,12 @@ class CarState(CarStateBase):
       ("ACC_Accel", "Cruise_Control_Buttons", 0),#ACC Accel Button
       ("ACC_Decel", "Cruise_Control_Buttons", 0),#ACC Decel Button
       ("ACC_Cancel", "Cruise_Control_Buttons", 0),#ACC Cancel Button
-      ("COUNTER", "Cruise_Control_Buttons", 0),#ACC Cancel Button
+      ("ACC_Distance_Dec", "Cruise_Control_Buttons", 0),#ACC Distance Decrement Button
+      ("ACC_Distance_Inc", "Cruise_Control_Buttons", 0),#ACC Distance Increment Button
+      ("ACC_Resume", "Cruise_Control_Buttons", 0),#ACC Resume Button
+      ("Cruise_OnOff", "Cruise_Control_Buttons", 0),#Cruise On Off Button
+      ("ACC_OnOff", "Cruise_Control_Buttons", 0),#ACC On Off Button
+      ("COUNTER", "Cruise_Control_Buttons", 0),#ACC Counter Button
       ("ACC_Distance_Inc", "Cruise_Control_Buttons", 0),#ACC Distance Increase Button
       ("Driver_Door_Ajar", "BCM_1", 0),#driver Door
       ("Passenger_Door_Ajar", "BCM_1", 0),#Passenger Door
