@@ -115,23 +115,23 @@ def create_wheel_buttons(packer, CS, fingerprint, pcm_cancel_cmd):
     acc_resume = False
 
 
- # values = {
- #   "ACC_Accel": CS.accaccel,
- #   "ACC_Decel": CS.acccancel,
- #   "ACC_Cancel": cancel,
- #   "ACC_Distance_Dec": CS.accdistancedec,
- #   "ACC_Distance_Inc":CS.accdistanceinc,
- #   "ACC_Resume": acc_resume,
- #   "Cruise_OnOff":CS.cruiseonoff,
- #   "ACC_OnOff":CS.acconoff,
- #   "COUNTER": frame,
- # }
-
-  values = CS.cruise
-  values.update({
+  values = {
+    "ACC_Accel": CS.accaccel,
+    "ACC_Decel": CS.acccancel,
     "ACC_Cancel": cancel,
+    "ACC_Distance_Dec": CS.accdistancedec,
+    "ACC_Distance_Inc":CS.accdistanceinc,
     "ACC_Resume": acc_resume,
-  })
+    "Cruise_OnOff":CS.cruiseonoff,
+    "ACC_OnOff":CS.acconoff,
+    "COUNTER": CS.ccbuttoncounter,
+  }
+
+  #values = CS.cruise
+  #values.update({
+  #  "ACC_Cancel": cancel,
+  #  "ACC_Resume": acc_resume,
+  #})
   
   if fingerprint in (CAR.RAM_1500, CAR.RAM_2500):
     bus = 2
