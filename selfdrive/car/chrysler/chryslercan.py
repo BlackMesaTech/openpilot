@@ -117,7 +117,7 @@ def create_wheel_buttons(packer, CS, fingerprint, pcm_cancel_cmd):
 
   values = {
     "ACC_Accel": CS.accaccel,
-    "ACC_Decel": CS.acccancel,
+    "ACC_Decel": CS.accdecel,
     "ACC_Cancel": cancel,
     "ACC_Distance_Dec": CS.accdistancedec,
     "ACC_Distance_Inc":CS.accdistanceinc,
