@@ -54,16 +54,16 @@ def create_lkas_hud(packer, lkas_active, hud_alert, hud_count, CS, fingerprint):
     lines = 0
     alerts = 0
 
-  if hud_alert in [VisualAlert.ldw]: #possible use this instead
-    color = 4
-    lines = 0
-    alerts = 6
-
   if hud_alert in [VisualAlert.steerRequired]: 
     color = 0
     lines = 0
     alerts = 0
     carmodel = 0xf
+
+  if hud_alert in [VisualAlert.ldw]: #possible use this instead
+    color = 4
+    lines = 0
+    alerts = 6
 
   if fingerprint in (CAR.RAM_1500, CAR.RAM_2500):
     values = {
