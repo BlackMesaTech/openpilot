@@ -45,8 +45,8 @@ class CarState(CarStateBase):
     self.frame = int(cp.vl["EPS_2"]["COUNTER"])
 
   # cruise state  
-    self.steer_command_bit = cp_cam.vl["LKAS_COMMAND"]['LKAS_CONTROL_BIT'] 
-    self.lkas_counter = cp_cam.vl["LKAS_COMMAND"]["COUNTER"]
+    #self.steer_command_bit = cp_cam.vl["LKAS_COMMAND"]['LKAS_CONTROL_BIT'] 
+    self.lkas_counter = cp_cam.vl["DAS_3"]["COUNTER"]
     self.lanelines = cp_cam.vl["DAS_6"]["LKAS_LANE_LINES"]
     self.iconcolor = cp_cam.vl["DAS_6"]["LKAS_ICON_COLOR"]
     self.lkas_car_model = cp_cam.vl["DAS_6"]["CAR_MODEL"] 
@@ -97,7 +97,7 @@ class CarState(CarStateBase):
       self.autoHighBeamBit = cp_cam.vl["DAS_6"]['Auto_High_Beam'] #Auto High Beam isn't Located in this message on chrysler or jeep currently located in 729 message
       #ret.cruiseState.speedOffset = ret.cruiseState.speed - ret.vEgo
       self.dashboard = cp_cam.vl["DAS_4"]
-      ret.steerError = cp_cam.vl["LKAS_COMMAND"]["LKAS_ERROR"]==1 # TODO: Find another bit to determine the steer error
+      #ret.steerError = cp_cam.vl["LKAS_COMMAND"]["LKAS_ERROR"]==1 # TODO: Find another bit to determine the steer error
 
 
   # gear
@@ -214,9 +214,9 @@ class CarState(CarStateBase):
   def get_cam_can_parser(CP):
     signals = [
       # sig_name, sig_address, default
-      ("LKAS_CONTROL_BIT", "LKAS_COMMAND", 0),
-      ("COUNTER", "LKAS_COMMAND", 0),
-      ("LKAS_ERROR", "LKAS_COMMAND", 0),
+      #("LKAS_CONTROL_BIT", "LKAS_COMMAND", 0),
+      #("COUNTER", "LKAS_COMMAND", 0),
+      #("LKAS_ERROR", "LKAS_COMMAND", 0),
       ("LKAS_LANE_LINES", "DAS_6", -1),
       ("LKAS_ICON_COLOR", "DAS_6", -1),
       ("LKAS_Disabled", "DAS_6", -1),
@@ -224,7 +224,7 @@ class CarState(CarStateBase):
       ("LKAS_ALERTS", "DAS_6", -1),
     ]
     checks = [
-      ("LKAS_COMMAND", 50),
+      #("LKAS_COMMAND", 50),
       ("DAS_6", 15),
     ]
 
@@ -232,6 +232,7 @@ class CarState(CarStateBase):
       signals += [
         ("ACC_Engaged", "DAS_3", 0),#ACC Engaged
         ("ACC_StandStill", "DAS_3", 0),#ACC Engaged
+        ("COUNTER", "DAS_3", 0),
         ("ACC_Set_Speed", "DAS_4", -1),
         ("ACC_Activation_Status", "DAS_4", -1),
         ("Auto_High_Beam", "DAS_6", -1),
