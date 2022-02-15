@@ -97,7 +97,7 @@ class CarState(CarStateBase):
       self.autoHighBeamBit = cp_cam.vl["DAS_6"]['Auto_High_Beam'] #Auto High Beam isn't Located in this message on chrysler or jeep currently located in 729 message
       #ret.cruiseState.speedOffset = ret.cruiseState.speed - ret.vEgo
       self.dashboard = cp_cam.vl["DAS_4"]
-      #ret.steerError = cp_cam.vl["LKAS_COMMAND"]["LKAS_ERROR"]==1 # TODO: Find another bit to determine the steer error
+      ret.steerError = False #cp_cam.vl["LKAS_COMMAND"]["LKAS_ERROR"]==1 # TODO: Find another bit to determine the steer error
 
 
   # gear

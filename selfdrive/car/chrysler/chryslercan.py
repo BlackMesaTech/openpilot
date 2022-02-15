@@ -58,9 +58,8 @@ def create_lkas_hud(packer, lkas_active, hud_alert, hud_count, CS, fingerprint):
     color = 4
     lines = 0
     alerts = 6
-    carmodel = 0
 
-  elif hud_alert in [VisualAlert.steerRequired]: 
+  if hud_alert in [VisualAlert.steerRequired]: 
     color = 0
     lines = 0
     alerts = 0
@@ -100,40 +99,14 @@ def create_lkas_command(packer, apply_steer, moving_fast, frame):
   return packer.make_can_msg("LKAS_COMMAND", 0, values)
 
 
-def create_wheel_buttons(packer, CS, fingerprint, pcm_cancel_cmd):
+def create_wheel_buttons(packer, CS, fingerprint, cancel = False, acc_resume = False):
   # Cruise_Control_Buttons Message sent to cancel ACC.
-  #cancel = CS.acccancel
-  #acc_resume = CS.accresume
-
-  if pcm_cancel_cmd or CS.acccancel:
-    cancel = True
-  else:
-    cancel = False
-  
-  if CS.out.cruiseState.standstill or CS.accresume:
-    acc_resume = True
-  else:
-    acc_resume = False
-
-
+  frame = CS.ccbuttoncounter + 1
   values = {
-    "ACC_Accel": CS.accaccel,
-    "ACC_Decel": CS.accdecel,
     "ACC_Cancel": cancel,
-    "ACC_Distance_Dec": CS.accdistancedec,
-    "ACC_Distance_Inc":CS.accdistanceinc,
+    "COUNTER": frame,
     "ACC_Resume": acc_resume,
-    "Cruise_OnOff":CS.cruiseonoff,
-    "ACC_OnOff":CS.acconoff,
-    "COUNTER": CS.ccbuttoncounter,
   }
-
-  #values = CS.cruise
-  #values.update({
-  #  "ACC_Cancel": cancel,
-  #  "ACC_Resume": acc_resume,
-  #})
-  
   if fingerprint in (CAR.RAM_1500, CAR.RAM_2500):
     bus = 2
   else:
