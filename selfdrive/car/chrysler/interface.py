@@ -47,9 +47,9 @@ class CarInterface(CarInterfaceBase):
       ret.steerRatio = 23  # just a guess
       ret.mass = 3405. + STD_CARGO_KG  # kg curb weight 2021 Ram 2500
       ret.lateralTuning.pid.kpBP, ret.lateralTuning.pid.kiBP = [[0.], [0.,]]
-      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.15], [0.015,]]
+      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.10], [0.008,]]
       ret.steerActuatorDelay = 0.1
-      ret.steerRateCost = 0.5  # may need tuning
+      ret.steerRateCost = 0.7  # may need tuning
       ret.centerToFront = ret.wheelbase * 0.38 # calculated from 100% - (front axle weight/total weight)
       ret.minSteerSpeed = 16
 
