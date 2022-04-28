@@ -39,7 +39,7 @@ class CarState(CarStateBase):
     ret.brake = 0
 
   # steering wheel  
-    ret.steeringAngleDeg = cp.vl["Steering_Column_Angle_Status"]["Steering_Wheel_Angle"]
+    ret.steeringAngleDeg = cp.vl["Steering_Column_Angle_Status"]["Steering_Wheel_Angle"] + 7
     ret.steeringRateDeg = cp.vl["Steering_Column_Angle_Status"]["Steering_Rate"]
     ret.steeringTorque = cp.vl["EPS_2"]["Steering_Column_Torque"]
     ret.steeringTorqueEps = cp.vl["EPS_2"]["EPS_Motor_Torque"]
