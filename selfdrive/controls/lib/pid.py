@@ -1,8 +1,7 @@
 import numpy as np
 from numbers import Number
-
-from common.numpy_fast import clip, interp
 from common.op_params import opParams
+from common.numpy_fast import clip, interp
 
 def apply_deadzone(error, deadzone):
   if error > deadzone:
