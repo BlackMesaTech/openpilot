@@ -194,7 +194,7 @@ def main(sm=None, pm=None):
         0.2 <= liveParameters.stiffnessFactor <= 5.0,
         min_sr <= liveParameters.steerRatio <= max_sr,
       ))
-      liveParameters.steerRatioStd = CP.steerRatio #float(P[States.STEER_RATIO])
+      liveParameters.steerRatioStd = float(P[States.STEER_RATIO])
       liveParameters.stiffnessFactorStd = float(P[States.STIFFNESS])
       liveParameters.angleOffsetAverageStd = float(P[States.ANGLE_OFFSET])
       liveParameters.angleOffsetFastStd = float(P[States.ANGLE_OFFSET_FAST])
