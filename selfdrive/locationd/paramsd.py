@@ -183,7 +183,7 @@ def main(sm=None, pm=None):
       liveParameters = msg.liveParameters
       liveParameters.posenetValid = True
       liveParameters.sensorValid = True
-      liveParameters.steerRatio = float(x[States.STEER_RATIO])
+      liveParameters.steerRatio = CP.steerRatio #float(x[States.STEER_RATIO])
       liveParameters.stiffnessFactor = float(x[States.STIFFNESS])
       liveParameters.roll = float(x[States.ROAD_ROLL])
       liveParameters.angleOffsetAverageDeg = angle_offset_average
@@ -194,7 +194,7 @@ def main(sm=None, pm=None):
         0.2 <= liveParameters.stiffnessFactor <= 5.0,
         min_sr <= liveParameters.steerRatio <= max_sr,
       ))
-      liveParameters.steerRatioStd = float(P[States.STEER_RATIO])
+      liveParameters.steerRatioStd = CP.steerRatio #float(P[States.STEER_RATIO])
       liveParameters.stiffnessFactorStd = float(P[States.STIFFNESS])
       liveParameters.angleOffsetAverageStd = float(P[States.ANGLE_OFFSET])
       liveParameters.angleOffsetFastStd = float(P[States.ANGLE_OFFSET_FAST])
@@ -202,7 +202,7 @@ def main(sm=None, pm=None):
       if sm.frame % 1200 == 0:  # once a minute
         params = {
           'carFingerprint': CP.carFingerprint,
-          'steerRatio': liveParameters.steerRatio,
+          'steerRatio': CP.steerRatio, #liveParameters.steerRatio,
           'stiffnessFactor': liveParameters.stiffnessFactor,
           'angleOffsetAverageDeg': liveParameters.angleOffsetAverageDeg,
         }
