@@ -61,7 +61,7 @@ class CarInterface(CarInterfaceBase):
 
     if candidate in (CAR.RAM_2500):
       
-      front_stiffness = 0.6 # want to change these so that front / rear stiffness ratio is learned at ~1.0
+      front_stiffness = 0.36 # want to change these so that front / rear stiffness ratio is learned at ~1.0
       rear_stiffness = 0.36
       ret.wheelbase = 3.785  # in meters
       ret.steerRatio = 15.61  # just a guess
@@ -77,7 +77,7 @@ class CarInterface(CarInterfaceBase):
       # ret.lateralTuning.torque.friction = 0.001
       ret.lateralTuning.torque.maxLatAccel = MAX_LAT_ACCEL
       ret.steerActuatorDelay = 0.1
-      ret.steerRateCost = 0.5  # may need tuning
+      ret.steerRateCost = 1.0  # may need tuning
       ret.centerToFront = ret.wheelbase * 0.38 # calculated from 100% - (front axle weight/total weight)
       ret.minSteerSpeed = 16.0
       ret.tireStiffnessFront, ret.tireStiffnessRear = ret.tireStiffnessFront*front_stiffness, ret.tireStiffnessRear*rear_stiffness
