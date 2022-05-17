@@ -55,12 +55,16 @@ class CarInterface(CarInterfaceBase):
       ret.centerToFront = ret.wheelbase * 0.4 # just a guess
       ret.minSteerSpeed = 14.5
 
+    # TODO: start from empirically derived lateral slip stiffness for the civic and scale by
+    # mass and CG position, so all cars will have approximately similar dyn behaviors
+    ret.tireStiffnessFront, ret.tireStiffnessRear = scale_tire_stiffness(ret.mass, ret.wheelbase, ret.centerToFront)
+
     if candidate in (CAR.RAM_2500):
       
       front_stiffness = 0.6 # want to change these so that front / rear stiffness ratio is learned at ~1.0
       rear_stiffness = 0.36
       ret.wheelbase = 3.785  # in meters
-      ret.steerRatio = 18.0  # just a guess
+      ret.steerRatio = 15.61  # just a guess
       ret.mass = 3405. + STD_CARGO_KG  # kg curb weight 2021 Ram 2500
       # ret.lateralTuning.pid.kpBP, ret.lateralTuning.pid.kiBP = [[0.], [0.,]]
       # ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.15], [0.015,]]
@@ -76,6 +80,7 @@ class CarInterface(CarInterfaceBase):
       ret.steerRateCost = 0.5  # may need tuning
       ret.centerToFront = ret.wheelbase * 0.38 # calculated from 100% - (front axle weight/total weight)
       ret.minSteerSpeed = 16.0
+      ret.tireStiffnessFront, ret.tireStiffnessRear = ret.tireStiffnessFront*front_stiffness, ret.tireStiffnessRear*rear_stiffness
 
 
     if candidate in (CAR.PACIFICA_2019_HYBRID, CAR.PACIFICA_2020, CAR.JEEP_CHEROKEE_2019):
@@ -84,11 +89,6 @@ class CarInterface(CarInterfaceBase):
 
     # starting with reasonable value for civic and scaling by mass and wheelbase
     ret.rotationalInertia = scale_rot_inertia(ret.mass, ret.wheelbase)
-
-    # TODO: start from empirically derived lateral slip stiffness for the civic and scale by
-    # mass and CG position, so all cars will have approximately similar dyn behaviors
-    ret.tireStiffnessFront, ret.tireStiffnessRear = scale_tire_stiffness(ret.mass, ret.wheelbase, ret.centerToFront)
-    ret.tireStiffnessFront, ret.tireStiffnessRear = ret.tireStiffnessFront*front_stiffness, ret.tireStiffnessRear*rear_stiffness
 
     ret.enableBsm = 720 in fingerprint[0]
 

@@ -2,7 +2,7 @@ import numpy as np
 from common.realtime import sec_since_boot
 from selfdrive.swaglog import cloudlog
 from selfdrive.controls.lib.lateral_mpc_lib.lat_mpc import LateralMpc, X_DIM
-from selfdrive.controls.lib.drive_helpers import CONTROL_N, MPC_COST_LAT, LAT_MPC_N, CAR_ROTATION_RADIUS
+from selfdrive.controls.lib.drive_helpers import CONTROL_N, MPC_COST_LAT, LAT_MPC_N
 from selfdrive.controls.lib.lane_planner import LanePlanner, TRAJECTORY_SIZE
 from selfdrive.controls.lib.desire_helper import DesireHelper
 import cereal.messaging as messaging
@@ -14,6 +14,7 @@ class LateralPlanner:
     self.use_lanelines = use_lanelines
     self.LP = LanePlanner(wide_camera)
     self.DH = DesireHelper()
+    self.wheelbase = CP.wheelbase
 
     self.last_cloudlog_t = 0
     self.steer_rate_cost = CP.steerRateCost
@@ -78,7 +79,7 @@ class LateralPlanner:
     assert len(heading_pts) == LAT_MPC_N + 1
     # self.x0[4] = v_ego
     self.x0[3] = measured_curvature
-    p = np.array([v_ego, CAR_ROTATION_RADIUS])
+    p = np.array([v_ego, self.wheelbase])
     self.lat_mpc.run(self.x0,
                      p,
                      y_pts,

@@ -4,7 +4,7 @@ from selfdrive.controls.lib.discrete import DiscreteController
 from common.realtime import DT_CTRL
 from common.numpy_fast import clip
 from cereal import log
-from common.op_params import opParams, MAX_LAT_ACCEL, LAT_KP_V, LAT_KI_V, LAT_KD_V
+from common.op_params import opParams, MAX_LAT_ACCEL, LAT_KI_V
 
 class LatControlTorque(LatControl):
   def __init__(self, CP, CI, OP=None):
@@ -13,9 +13,9 @@ class LatControlTorque(LatControl):
     self.op_params = OP
     super().__init__(CP, CI)
     
-    p = self.op_params.get(LAT_KP_V) / self.op_params.get(MAX_LAT_ACCEL)
-    i = self.op_params.get(LAT_KI_V) / self.op_params.get(MAX_LAT_ACCEL)
-    d = self.op_params.get(LAT_KD_V) / self.op_params.get(MAX_LAT_ACCEL)
+    p = self.op_params.get(LAT_KI_V) / self.op_params.get(MAX_LAT_ACCEL)
+    i = self.op_params.get(LAT_KI_V)
+    d = self.op_params.get(LAT_KI_V) / self.op_params.get(MAX_LAT_ACCEL) ** 2
     gains = [i, p, d]
     N = 10 # Filter coefficient. corner frequency in rad/s. 20 = ~3.18hz
     Z = [[[1, 1], [2, -2]], [[1], [1]], [[2, -2], [1-2j, 1+2j]]] # Trapezoidal IPD
@@ -31,9 +31,9 @@ class LatControlTorque(LatControl):
 
   def update(self, active, CS, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk):
 
-    p = self.op_params.get(LAT_KP_V) / self.op_params.get(MAX_LAT_ACCEL)
-    i = self.op_params.get(LAT_KI_V) / self.op_params.get(MAX_LAT_ACCEL)
-    d = self.op_params.get(LAT_KD_V) / self.op_params.get(MAX_LAT_ACCEL)
+    p = self.op_params.get(LAT_KI_V) / self.op_params.get(MAX_LAT_ACCEL)
+    i = self.op_params.get(LAT_KI_V)
+    d = self.op_params.get(LAT_KI_V) / self.op_params.get(MAX_LAT_ACCEL) ** 2
     gains = [i, p, d]
     self.pid.update_gains(gains)
 
@@ -53,7 +53,7 @@ class LatControlTorque(LatControl):
       pid_log.d = float(self.pid.gains[2]*self.pid.d[2][1])
       pid_log.output = -output_torque
       pid_log.saturated = self._check_saturation(self.steer_max - abs(output_torque) < 1e-3, CS)
-      pid_log.actualLateralAccel = -VM.calc_curvature(math.radians(CS.steeringAngleDeg - params.angleOffsetAverageDeg), CS.vEgo, params.roll) * (CS.vEgo**2)
+      pid_log.actualLateralAccel = -VM.calc_curvature(math.radians(CS.steeringAngleDeg - params.angleOffsetDeg), CS.vEgo, params.roll) * (CS.vEgo**2)
       pid_log.desiredLateralAccel = desired_curvature * (CS.vEgo**2)
 
     return output_torque, 0.0, pid_log
