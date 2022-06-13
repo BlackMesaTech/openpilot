@@ -43,6 +43,7 @@ BO_ 258 Steering_Column_Angle_Status: 8 XXX
  SG_ CHECKSUM : 63|8@0+ (1,0) [0|255] "" XXX
 
 BO_ 284 ESP_8: 8 XXX 
+ SG_ STOPPED : 7|1@1+ (1,0) [0|0] ""  DASM
  SG_ BRK_PRESSURE : 3|12@0+ (1,0) [0|1] "" XXX
  SG_ BRAKE_PEDAL : 19|12@0+ (1,0) [0|1] "" XXX
  SG_ Vehicle_Speed : 39|16@0+ (0.0078125,0) [0|511.984375] "km/h" XXX

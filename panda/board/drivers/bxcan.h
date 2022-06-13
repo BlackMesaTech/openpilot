@@ -2,6 +2,15 @@
 //       CAN2_TX, CAN2_RX0, CAN2_SCE
 //       CAN3_TX, CAN3_RX0, CAN3_SCE
 
+// Safety-relevant CAN messages for Chrysler/Jeep platforms
+#define ESP_8                      284  // Brake pedal and vehicle speed
+#define ESP_5                      292
+
+
+// Safety-relevant CAN messages for the 5th gen RAM (DT) platform
+#define ESP_8_RAM                  121  // Brake pedal and vehicle speed
+#define ESP_5_RAM                  127
+
 CAN_TypeDef *cans[] = {CAN1, CAN2, CAN3};
 
 bool can_set_speed(uint8_t can_number) {
@@ -95,6 +104,38 @@ void can_sce(CAN_TypeDef *CAN) {
   llcan_clear_send(CAN);
   EXIT_CRITICAL();
 }
+
+void send_steer_enable_speed(CANPacket_t *to_send){
+  int crc;
+  to_send->data[0] = 0;
+  to_send->data[1] = 0;
+  to_send->data[2] = 0;
+  to_send->data[3] = 0;
+  to_send->data[4] = 0x20;
+  to_send->data[5] = 0x80;
+  to_send->data[7] = 0;  //clear speed and Checksum
+  crc = chrysler_compute_checksum(to_send);
+  to_send->data[7] = crc;   //replace Checksum
+}
+
+static void send_esp_5_msg(CANPacket_t *to_send){
+  to_send->data[0] = 0;
+  to_send->data[1] = 0;
+  to_send->data[2] = 0;
+  to_send->data[3] = 0;
+}
+
+// static void send_apa_signature(CANPacket_t *to_send){
+//   int crc;
+//   //to_fwd->RDHR &= 0x00FF0000;  //clear everything except counter
+//   to_send->data[4] = 0;
+//   to_send->data[6] = 0;
+//   to_send->data[7] = 0;
+//   crc = chrysler_compute_checksum(to_send);    
+//   //to_fwd->RDHR |= (((crc << 8) << 8) << 8);   //replace Checksum
+//   to_send->data[7] = crc;   //replace Checksum
+// };
+
 
 // ***************************** CAN *****************************
 void process_can(uint8_t can_number) {
@@ -196,7 +237,32 @@ void can_rx(uint8_t can_number) {
       to_send.bus = to_push.bus;
       to_send.data_len_code = to_push.data_len_code;
       (void)memcpy(to_send.data, to_push.data, dlc_to_len[to_push.data_len_code]);
+      if (bus_fwd_num < 4){
       can_send(&to_send, bus_fwd_num, true);
+      int addr = GET_ADDR(&to_send);
+        if (bus_fwd_num == 2) {
+          if ((addr == ESP_8) || (addr == ESP_8_RAM)) {  
+            send_steer_enable_speed(&to_send);
+            can_send(&to_send, 1, true);
+          }
+          if ((addr == ESP_5) || (addr == ESP_5_RAM)) { //xxx
+            send_esp_5_msg(&to_send);
+            can_send(&to_send, 1, true);
+          }
+        }
+      }
+      if (bus_fwd_num == 10){
+      can_send(&to_send, 0, true);
+      can_send(&to_send, 1, true);
+      }
+      if (bus_fwd_num == 20){
+      can_send(&to_send, 0, true);
+      can_send(&to_send, 2, true);
+      }
+      if (bus_fwd_num == 12){
+      can_send(&to_send, 1, true);
+      can_send(&to_send, 2, true);
+      }
     }
 
     can_rx_errs += safety_rx_hook(&to_push) ? 0U : 1U;

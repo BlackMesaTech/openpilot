@@ -16,6 +16,7 @@ const int RAM_MAX_TORQUE_ERROR = 400;         // since 2 x the rate up from chrs
 // Safety-relevant CAN messages for Chrysler/Jeep platforms
 #define EPS_2                      544  // EPS driver input torque
 #define ESP_1                      320  // Brake pedal and vehicle speed
+#define ESP_5                      292
 #define ESP_8                      284  // Brake pedal and vehicle speed
 #define ECM_5                      559  // Throttle position sensor
 #define DAS_3                      500  // ACC engagement states from DASM
@@ -26,6 +27,7 @@ const int RAM_MAX_TORQUE_ERROR = 400;         // since 2 x the rate up from chrs
 // Safety-relevant CAN messages for the 5th gen RAM (DT) platform
 #define EPS_2_RAM                   49  // EPS driver input torque
 #define ESP_1_RAM                  131  // Brake pedal and vehicle speed
+#define ESP_5_RAM                  127
 #define ESP_8_RAM                  121  // Brake pedal and vehicle speed
 #define ECM_5_RAM                  157  // Throttle position sensor
 #define DAS_3_RAM                  153  // ACC engagement states from DASM
@@ -45,7 +47,7 @@ const CanMsg CHRYSLER_TX_MSGS[] = {{Cruise_Control_Buttons, 0, 3},{LKAS_COMMAND,
   {Cruise_Control_Buttons_HD, 2, 3}, {LKAS_COMMAND_HD, 0, 8}, {DAS_6_HD, 0, 8}};
 
 AddrCheckStruct chrysler_addr_checks[] = {
-  {.msg = {{EPS_2, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 10000U}, {EPS_2_RAM, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 10000U}}},  // EPS module
+  {.msg = {{EPS_2, 1, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 10000U}, {EPS_2_RAM, 1, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 10000U}}},  // EPS module
   {.msg = {{ESP_1, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, {ESP_1_RAM, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}}},  // brake pressed
   {.msg = {{ESP_8, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, {ESP_8_RAM, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}}},  // vehicle Speed
   {.msg = {{ECM_5, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, {ECM_5_RAM, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}}}, // gas pedal
@@ -122,7 +124,7 @@ static int chrysler_rx_hook(CANPacket_t *to_push) {
         controls_allowed = 1;
       }
       if (!cruise_engaged) {
-        controls_allowed = 0;
+        // controls_allowed = 0;
       }
       cruise_engaged_prev = cruise_engaged;
     }
@@ -142,7 +144,7 @@ static int chrysler_rx_hook(CANPacket_t *to_push) {
     if ((bus == 0U) && ((addr == ESP_1) || (addr == ESP_1_RAM))) {
       brake_pressed = (GET_BYTE(to_push, 0) & 0xCU) == 0x4U;
       if (brake_pressed && (!brake_pressed_prev || vehicle_moving)) {
-        controls_allowed = 0;
+        // controls_allowed = 0;
       }
       brake_pressed_prev = brake_pressed;
     }
@@ -227,7 +229,7 @@ static int chrysler_tx_hook(CANPacket_t *to_send, bool longitudinal_allowed) {
       desired_torque_last = desired_torque;
 
       // *** torque real time rate limit check ***
-      violation |= rt_rate_limit_check(desired_torque, rt_torque_last, RAM_MAX_RT_DELTA);
+      //violation |= rt_rate_limit_check(desired_torque, rt_torque_last, RAM_MAX_RT_DELTA);
 
       // every RT_INTERVAL set the new limits
       uint32_t ts_elapsed = get_ts_elapsed(ts, ts_last);
@@ -271,16 +273,41 @@ static int chrysler_fwd_hook(int bus_num, CANPacket_t *to_fwd) {
   int bus_fwd = -1;
   int addr = GET_ADDR(to_fwd);
 
-  // forward CAN 0 -> 2 so stock LKAS camera sees messages
-  if (bus_num == 0U && (addr != Center_Stack_2_RAM)) {//Ram and HD share the same
-    bus_fwd = 2;
+  // forward CAN 0 & 1 -> 2 so stock LKAS camera sees messages
+  if (bus_num == 0U){
+    if ((addr == ESP_8)|| (addr == ESP_8_RAM) || (addr == ESP_5) || (addr == ESP_5_RAM)) {
+      bus_fwd = 2;
+      // CANPacket_t to_send_mod;
+      // to_send_mod.data[6] = to_fwd->data[6];
+      // send_steer_enable_speed(&to_send_mod);
+      // can_send(&to_send_mod, 1, true);
+    }
+    else if (addr == Center_Stack_2_RAM){
+      bus_fwd = 1;
+    }
+    else {//Ram and HD share the same
+      bus_fwd = 12;
+    }
   }
 
   // forward all messages from camera except LKAS_COMMAND and LKAS_HUD
-  if ((bus_num == 2U) && (addr != LKAS_COMMAND) && (addr != DAS_6) 
-    && (addr != LKAS_COMMAND_RAM) && (addr != DAS_6_RAM)
-    && (addr != LKAS_COMMAND_HD) && (addr != DAS_6_HD)){
-    bus_fwd = 0;
+  if (bus_num == 2U) {
+    if ((addr == LKAS_COMMAND) || (addr == LKAS_COMMAND_RAM) || (addr == LKAS_COMMAND_HD)){
+          //DO NOTHING
+    }
+    else if ((addr == DAS_6_RAM) || (addr == DAS_6) || (addr == DAS_6_HD)){
+      bus_fwd = 1;
+    }
+    else {
+      bus_fwd = 10;
+    }
+  }
+
+
+
+  //forward CAN1->CAN2
+  if (bus_num == 1U){
+    bus_fwd = 20;
   }
 
   return bus_fwd;
