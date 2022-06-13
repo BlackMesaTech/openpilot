@@ -53,7 +53,7 @@ class CarInterface(CarInterfaceBase):
       ret.steerActuatorDelay = 0.1
       ret.steerRateCost = 1.0  # may need tuning
       ret.centerToFront = ret.wheelbase * 0.38 # calculated from 100% - (front axle weight/total weight)
-      ret.minSteerSpeed = 16.0
+      ret.minSteerSpeed = 16
       set_torque_tune(ret.lateralTuning, MAX_LAT_ACCEL, FRICTION)
 
     # TODO: start from empirically derived lateral slip stiffness for the civic and scale by
@@ -74,7 +74,7 @@ class CarInterface(CarInterfaceBase):
 
   # returns a car.CarState
   def _update(self, c):
-    ret = self.CS.update(self.cp, self.cp_cam)
+    ret = self.CS.update(self.cp, self.cp_cam, self.cp_eps)
 
     ret.steeringRateLimited = self.CC.steer_rate_limited if self.CC is not None else False
 

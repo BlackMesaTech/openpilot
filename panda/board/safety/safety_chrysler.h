@@ -271,16 +271,37 @@ static int chrysler_fwd_hook(int bus_num, CANPacket_t *to_fwd) {
   int bus_fwd = -1;
   int addr = GET_ADDR(to_fwd);
 
-  // forward CAN 0 -> 2 so stock LKAS camera sees messages
-  if (bus_num == 0U && (addr != Center_Stack_2_RAM)) {//Ram and HD share the same
-    bus_fwd = 2;
+  // forward CAN 0 & 1 -> 2 so stock LKAS camera sees messages
+  if (bus_num == 0U){
+    if (addr == ESP_8){
+      bus_fwd = 12;
+    }
+    else if (addr == Center_Stack_2_RAM){
+      bus_fwd = 1;
+    }
+    else {//Ram and HD share the same
+      bus_fwd = 12;
+    }
   }
 
   // forward all messages from camera except LKAS_COMMAND and LKAS_HUD
-  if ((bus_num == 2U) && (addr != LKAS_COMMAND) && (addr != DAS_6) 
-    && (addr != LKAS_COMMAND_RAM) && (addr != DAS_6_RAM)
-    && (addr != LKAS_COMMAND_HD) && (addr != DAS_6_HD)){
-    bus_fwd = 0;
+  if (bus_num == 2U) {
+    if ((addr == LKAS_COMMAND) || (addr == LKAS_COMMAND_RAM) || (addr == LKAS_COMMAND_HD)){
+          bus_fwd = 1;
+    }
+    else if ((addr == DAS_6_RAM) || (addr == DAS_6) || (addr == DAS_6_HD)){
+      bus_fwd = 1;
+    }
+    else {
+      bus_fwd = 10;
+    }
+  }
+
+
+
+  //forward CAN1->CAN2
+  if (bus_num == 1U){
+    bus_fwd = 20;
   }
 
   return bus_fwd;
