@@ -179,7 +179,7 @@ class opParams:
                         STOCK_DELTA_UP_DOWN: Param(12, VT.number, live=True),
                         #STOCK_DELTA_UP: Param(25, VT.number, live=True ,depends_on=SHOW_RATE_PARAMS),
                         #STOCK_DELTA_DOWN: Param(50, VT.number, live=True ,depends_on=SHOW_RATE_PARAMS),
-                        #STOCK_STEER_MAX: Param(363, VT.number, live=True ,depends_on=SHOW_RATE_PARAMS),
+                        STOCK_STEER_MAX: Param(261, VT.number, live=True),
 }
 
     self._params_file = '/data/op_params.json'
@@ -339,7 +339,7 @@ FRICTION = 'friction'
 STOCK_DELTA_UP_DOWN = 'stock_delta_up_down'
 # STOCK_DELTA_UP = 'stock_delta_up'
 # STOCK_DELTA_DOWN = 'stock_delta_down'
-# STOCK_STEER_MAX = 'stock_steer_max'
+STOCK_STEER_MAX = 'stock_steer_max'
 # STEER_ACT_DELAY = 'steer_act_delay'
 # STEER_RATIO = 'steer ratio'
 # STEER_RATE_COST = 'steer_rate_cost'
