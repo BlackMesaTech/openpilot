@@ -16,6 +16,7 @@ const int RAM_MAX_TORQUE_ERROR = 400;         // since 2 x the rate up from chrs
 // Safety-relevant CAN messages for Chrysler/Jeep platforms
 #define EPS_2                      544  // EPS driver input torque
 #define ESP_1                      320  // Brake pedal and vehicle speed
+#define ESP_5                      292
 #define ESP_8                      284  // Brake pedal and vehicle speed
 #define ECM_5                      559  // Throttle position sensor
 #define DAS_3                      500  // ACC engagement states from DASM
@@ -26,6 +27,7 @@ const int RAM_MAX_TORQUE_ERROR = 400;         // since 2 x the rate up from chrs
 // Safety-relevant CAN messages for the 5th gen RAM (DT) platform
 #define EPS_2_RAM                   49  // EPS driver input torque
 #define ESP_1_RAM                  131  // Brake pedal and vehicle speed
+#define ESP_5_RAM                  127
 #define ESP_8_RAM                  121  // Brake pedal and vehicle speed
 #define ECM_5_RAM                  157  // Throttle position sensor
 #define DAS_3_RAM                  153  // ACC engagement states from DASM
@@ -271,16 +273,41 @@ static int chrysler_fwd_hook(int bus_num, CANPacket_t *to_fwd) {
   int bus_fwd = -1;
   int addr = GET_ADDR(to_fwd);
 
-  // forward CAN 0 -> 2 so stock LKAS camera sees messages
-  if (bus_num == 0U && (addr != Center_Stack_2_RAM)) {//Ram and HD share the same
-    bus_fwd = 2;
+  // forward CAN 0 & 1 -> 2 so stock LKAS camera sees messages
+  if (bus_num == 0U){
+    if ((addr == ESP_8)|| (addr == ESP_8_RAM) || (addr == ESP_5) || (addr == ESP_5_RAM)) {
+      bus_fwd = 2;
+      // CANPacket_t to_send_mod;
+      // to_send_mod.data[6] = to_fwd->data[6];
+      // send_steer_enable_speed(&to_send_mod);
+      // can_send(&to_send_mod, 1, true);
+    }
+    else if (addr == Center_Stack_2_RAM){
+      bus_fwd = 1;
+    }
+    else {//Ram and HD share the same
+      bus_fwd = 12;
+    }
   }
 
   // forward all messages from camera except LKAS_COMMAND and LKAS_HUD
-  if ((bus_num == 2U) && (addr != LKAS_COMMAND) && (addr != DAS_6) 
-    && (addr != LKAS_COMMAND_RAM) && (addr != DAS_6_RAM)
-    && (addr != LKAS_COMMAND_HD) && (addr != DAS_6_HD)){
-    bus_fwd = 0;
+  if (bus_num == 2U) {
+    if ((addr == LKAS_COMMAND) || (addr == LKAS_COMMAND_RAM) || (addr == LKAS_COMMAND_HD)){
+          //DO NOTHING
+    }
+    else if ((addr == DAS_6_RAM) || (addr == DAS_6) || (addr == DAS_6_HD)){
+      bus_fwd = 1;
+    }
+    else {
+      bus_fwd = 10;
+    }
+  }
+
+
+
+  //forward CAN1->CAN2
+  if (bus_num == 1U){
+    bus_fwd = 20;
   }
 
   return bus_fwd;
