@@ -41,7 +41,7 @@ class CarState(CarStateBase):
       cp.vl["WHEEL_SPEEDS"]["WHEEL_SPEED_RR"],
       unit=1,
     )
-    ret.vEgoRaw = cp.vl["BRAKE_1"]["VEHICLE_SPEED"] * CV.KPH_TO_MS
+    ret.vEgoRaw = (ret.wheelSpeeds.fl + ret.wheelSpeeds.fr + ret.wheelSpeeds.rl + ret.wheelSpeeds.rr) / 4.
     ret.vEgo, ret.aEgo = self.update_speed_kf(ret.vEgoRaw)
     ret.standstill = not ret.vEgoRaw > 0.001
 
@@ -93,7 +93,6 @@ class CarState(CarStateBase):
       ("DOOR_OPEN_RR", "DOORS"),
       ("BRAKE_PRESSED_2", "BRAKE_2"),
       ("ACCELERATOR_POSITION", "ACCEL_GAS_22F"),
-      ("VEHICLE_SPEED", "BRAKE_1"),
       ("WHEEL_SPEED_FL", "WHEEL_SPEEDS"),
       ("WHEEL_SPEED_RR", "WHEEL_SPEEDS"),
       ("WHEEL_SPEED_RL", "WHEEL_SPEEDS"),
@@ -132,7 +131,6 @@ class CarState(CarStateBase):
       ("SEATBELT_STATUS", 2),
       ("DOORS", 1),
       ("TRACTION_BUTTON", 1),
-      ("BRAKE_1", 50),
     ]
 
     if CP.enableBsm:
