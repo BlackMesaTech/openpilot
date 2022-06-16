@@ -17,8 +17,8 @@ class CarState(CarStateBase):
     ret = car.CarState.new_message()
 
     self.frame = int(cp.vl["EPS_STATUS"]["COUNTER"])
-    
-    # lock info 
+
+    # lock info
     ret.doorOpen = any([cp.vl["DOORS"]["DOOR_OPEN_FL"],
                         cp.vl["DOORS"]["DOOR_OPEN_FR"],
                         cp.vl["DOORS"]["DOOR_OPEN_RL"],
@@ -26,14 +26,14 @@ class CarState(CarStateBase):
     ret.seatbeltUnlatched = cp.vl["SEATBELT_STATUS"]["SEATBELT_DRIVER_UNLATCHED"] == 1
 
     # brake pedal
-    ret.brakePressed = cp.vl["BRAKE_2"]["BRAKE_PRESSED_2"] ==1  # Physical brake pedal switch
     ret.brake = 0
+    ret.brakePressed = cp.vl["BRAKE_2"]["BRAKE_PRESSED_2"] ==1  # Physical brake pedal switch
 
     # gas pedal
     ret.gas = cp.vl["ACCEL_GAS_22F"]["ACCELERATOR_POSITION"]
     ret.gasPressed = ret.gas > 1e-5
 
-    # Speeds
+    # speeds
     ret.wheelSpeeds = self.get_wheel_speeds(
       cp.vl["WHEEL_SPEEDS"]["WHEEL_SPEED_FL"],
       cp.vl["WHEEL_SPEEDS"]["WHEEL_SPEED_FR"],
@@ -45,39 +45,41 @@ class CarState(CarStateBase):
     ret.vEgo, ret.aEgo = self.update_speed_kf(ret.vEgoRaw)
     ret.standstill = not ret.vEgoRaw > 0.001
 
-    # Button Presses
-    ret.espDisabled = (cp.vl["TRACTION_BUTTON"]["TRACTION_OFF"] == 1) # TODO: button is pressed. This doesn't mean ESP is diabled.
+    # button presses
+    ret.espDisabled = cp.vl["TRACTION_BUTTON"]["TRACTION_OFF"] == 1 # TODO: this is button press, not ESP state
     ret.leftBlinker = cp.vl["STEERING_LEVERS"]["TURN_SIGNALS"] == 1
     ret.rightBlinker = cp.vl["STEERING_LEVERS"]["TURN_SIGNALS"] == 2
     ret.genericToggle = bool(cp.vl["STEERING_LEVERS"]["HIGH_BEAM_FLASH"])
 
-    #Gear
+    # gear
     ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(cp.vl["TRANSMISSION_STATUS"]["GEAR_STATE"], None))
 
-    #Steering Info
+    # steering
     ret.steeringAngleDeg = cp.vl["STEERING"]["STEER_ANGLE"]
     ret.steeringRateDeg = cp.vl["STEERING"]["STEERING_RATE"]
     ret.steeringTorque = cp.vl["EPS_STATUS"]["TORQUE_DRIVER"]
     ret.steeringTorqueEps = cp.vl["EPS_STATUS"]["TORQUE_MOTOR"]
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD
     steer_state = cp.vl["EPS_STATUS"]["LKAS_STATE"]
-    self.button_counter = cp.vl["WHEEL_BUTTONS"]["COUNTER"]
+    ret.steerFaultPermanent = steer_state == 4 or (steer_state == 0 and ret.vEgo > self.CP.minSteerSpeed)
 
     if self.CP.enableBsm:
       ret.leftBlindspot = cp.vl["BLIND_SPOT_WARNINGS"]["BLIND_SPOT_LEFT"] == 1
       ret.rightBlindspot = cp.vl["BLIND_SPOT_WARNINGS"]["BLIND_SPOT_RIGHT"] == 1
 
+    # cruise state
     ret.cruiseState.enabled = cp.vl["ACC_2"]["ACC_ENGAGED"] == 1  # ACC is green.
     ret.cruiseState.available = cp.vl["ACC_2"]["ACC_ENABLED"] == 1
     ret.cruiseState.speed = cp.vl["DASHBOARD"]["ACC_SPEED_CONFIG_KPH"] * CV.KPH_TO_MS
     # CRUISE_STATE is a three bit msg, 0 is off, 1 and 2 are Non-ACC mode, 3 and 4 are ACC mode, find if there are other states too
     ret.cruiseState.nonAdaptive = cp.vl["DASHBOARD"]["CRUISE_STATE"] in (1, 2)
     ret.accFaulted = cp.vl["ACC_2"]["ACC_FAULTED"] != 0
+
+    self.button_counter = cp.vl["WHEEL_BUTTONS"]["COUNTER"]
     self.lkas_counter = cp_cam.vl["LKAS_COMMAND"]["COUNTER"]
     self.lkas_car_model = cp_cam.vl["LKAS_HUD"]["CAR_MODEL"]
     self.lkas_status_ok = cp_cam.vl["LKAS_HEARTBIT"]["LKAS_STATUS_OK"]
-    ret.steerFaultPermanent = steer_state == 4 or (steer_state == 0 and ret.vEgo > self.CP.minSteerSpeed)
-    
+
     return ret
 
   @staticmethod
