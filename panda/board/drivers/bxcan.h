@@ -107,6 +107,7 @@ void can_sce(CAN_TypeDef *CAN) {
 
 void send_steer_enable_speed(CANPacket_t *to_send){
   int crc;
+
   to_send->data[0] = 0;
   to_send->data[1] = 0;
   to_send->data[2] = 0;
@@ -117,25 +118,6 @@ void send_steer_enable_speed(CANPacket_t *to_send){
   crc = chrysler_compute_checksum(to_send);
   to_send->data[7] = crc;   //replace Checksum
 }
-
-static void send_esp_5_msg(CANPacket_t *to_send){
-  to_send->data[0] = 0;
-  to_send->data[1] = 0;
-  to_send->data[2] = 0;
-  to_send->data[3] = 0;
-}
-
-// static void send_apa_signature(CANPacket_t *to_send){
-//   int crc;
-//   //to_fwd->RDHR &= 0x00FF0000;  //clear everything except counter
-//   to_send->data[4] = 0;
-//   to_send->data[6] = 0;
-//   to_send->data[7] = 0;
-//   crc = chrysler_compute_checksum(to_send);    
-//   //to_fwd->RDHR |= (((crc << 8) << 8) << 8);   //replace Checksum
-//   to_send->data[7] = crc;   //replace Checksum
-// };
-
 
 // ***************************** CAN *****************************
 void process_can(uint8_t can_number) {
@@ -243,10 +225,6 @@ void can_rx(uint8_t can_number) {
         if (bus_fwd_num == 2) {
           if ((addr == ESP_8) || (addr == ESP_8_RAM)) {  
             send_steer_enable_speed(&to_send);
-            can_send(&to_send, 1, true);
-          }
-          if ((addr == ESP_5) || (addr == ESP_5_RAM)) { //xxx
-            send_esp_5_msg(&to_send);
             can_send(&to_send, 1, true);
           }
         }
