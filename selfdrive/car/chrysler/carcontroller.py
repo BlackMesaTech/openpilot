@@ -90,7 +90,7 @@ class CarController:
       self.apply_steer_last = apply_steer
       self.gone_fast_yet_previous = self.gone_fast_yet
       can_sends.append(create_lkas_command(self.packer, int(apply_steer), self.gone_fast_yet, CS.lkas_counter,0))
-      #can_sends.append(create_lkas_command(self.packer, int(apply_steer), self.gone_fast_yet, CS.lkas_counter,1))
+      can_sends.append(create_lkas_command(self.packer, int(apply_steer), self.gone_fast_yet, CS.lkas_counter,1))
 
     self.frame += 1
     self.prev_lkas_frame = CS.lkas_counter

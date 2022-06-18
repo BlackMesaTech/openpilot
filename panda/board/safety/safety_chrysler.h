@@ -45,7 +45,7 @@ const CanMsg CHRYSLER_TX_MSGS[] = {{Cruise_Control_Buttons, 0, 3},{LKAS_COMMAND,
   {Cruise_Control_Buttons_HD, 2, 3}, {LKAS_COMMAND_HD, 0, 8}, {DAS_6_HD, 0, 8}};
 
 AddrCheckStruct chrysler_addr_checks[] = {
-  {.msg = {{EPS_2, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 10000U}, {EPS_2_RAM, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 10000U}}},  // EPS module
+  {.msg = {{EPS_2, 1, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 10000U}, {EPS_2_RAM, 1, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 10000U}}},  // EPS module
   {.msg = {{ESP_1, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, {ESP_1_RAM, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}}},  // brake pressed
   {.msg = {{ESP_8, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, {ESP_8_RAM, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}}},  // vehicle Speed
   {.msg = {{ECM_5, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, {ECM_5_RAM, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}}}, // gas pedal
@@ -287,7 +287,7 @@ static int chrysler_fwd_hook(int bus_num, CANPacket_t *to_fwd) {
   // forward all messages from camera except LKAS_COMMAND and LKAS_HUD
   if (bus_num == 2U) {
     if ((addr == LKAS_COMMAND) || (addr == LKAS_COMMAND_RAM) || (addr == LKAS_COMMAND_HD)){
-          bus_fwd = 1;
+
     }
     else if ((addr == DAS_6_RAM) || (addr == DAS_6) || (addr == DAS_6_HD)){
       bus_fwd = 1;
