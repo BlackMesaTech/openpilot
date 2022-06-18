@@ -106,58 +106,69 @@ void can_sce(CAN_TypeDef *CAN) {
   llcan_clear_send(CAN);
   EXIT_CRITICAL();
 }
-
+uint16_t veh_speed = 0;
 void send_steer_enable_speed(CANPacket_t *to_send){
   int crc;
-  to_send->data[0] = 0;
-  to_send->data[1] = 0;
-  to_send->data[2] = 0;
-  to_send->data[3] = 0;
-  to_send->data[4] = 0x20;
-  to_send->data[5] = 0x80;
-  to_send->data[7] = 0;  //clear speed and Checksum
-  crc = chrysler_compute_checksum(to_send);
-  to_send->data[7] = crc;   //replace Checksum
+  if (veh_speed > 7425){
+    to_send->data[0] = 0;
+    to_send->data[1] = 0;
+    to_send->data[2] = 0;
+    to_send->data[3] = 0;
+    to_send->data[4] = (veh_speed >> 8) & 0xFF;
+    to_send->data[5] = veh_speed & 0xFF;
+    to_send->data[7] = 0;  //clear speed and Checksum
+    crc = chrysler_compute_checksum(to_send);
+    to_send->data[7] = crc;   //replace Checksum
+  }
+  else{
+  veh_speed = (((GET_BYTE(to_send, 4) & 0x3U) << 8) + GET_BYTE(to_send, 5));
+  }
 }
-int wheelpulse;
+uint16_t wheelpulse;
 static void send_esp_5_msg(CANPacket_t *to_send){
-  wheelpulse = (wheelpulse + 13) & 0xFF;
-  to_send->data[0] = wheelpulse;
-  to_send->data[1] = wheelpulse;
-  to_send->data[2] = wheelpulse;
-  to_send->data[3] = wheelpulse;
+  if (veh_speed > 7425){
+    wheelpulse = (wheelpulse + 13) & 0xFF;
+    to_send->data[0] = wheelpulse;
+    to_send->data[1] = wheelpulse;
+    to_send->data[2] = wheelpulse;
+    to_send->data[3] = wheelpulse;
+  }
 }
+uint16_t front = 0;
+uint16_t rear = 0;
 static void send_esp_6_msg(CANPacket_t *to_send){
-  to_send->data[0] = 0x43;
-  to_send->data[1] = 0x2e;
-  to_send->data[2] = 0x43;
-  to_send->data[3] = 0x2e;
-  to_send->data[4] = 0xc3;
-  to_send->data[5] = 0x33;
-  to_send->data[6] = 0xc3;
-  to_send->data[7] = 0x33;
+  if (veh_speed > 7425){
+    to_send->data[0] = (front >> 8) & 0xFF;
+    to_send->data[1] = front & 0xFF;
+    to_send->data[2] = (front >> 8) & 0xFF;
+    to_send->data[3] = front & 0xFF;
+    to_send->data[4] = (rear >> 8) & 0xFF;
+    to_send->data[5] = rear & 0xFF;
+    to_send->data[6] = (rear >> 8) & 0xFF;
+    to_send->data[7] = rear & 0xFF;
+  }
+  else{
+    front = (((GET_BYTE(to_send, 0) & 0x3U) << 8) + GET_BYTE(to_send, 1));
+    rear = (((GET_BYTE(to_send, 4) & 0x3U) << 8) + GET_BYTE(to_send, 5));
+  }
 }
+uint16_t whl_spd = 0;
 static void send_whl_spd_msg(CANPacket_t *to_send){
-  to_send->data[0] = 0x0d;
-  to_send->data[1] = 0x90;
-  to_send->data[2] = 0x0d;
-  to_send->data[3] = 0x90;
+  if (veh_speed > 7425){
+  to_send->data[0] = (whl_spd >> 8) & 0xFF;
+  to_send->data[1] = whl_spd & 0xFF;
+  to_send->data[2] = (whl_spd >> 8) & 0xFF;
+  to_send->data[3] = whl_spd & 0xFF;
   to_send->data[4] = 0x01;
   to_send->data[5] = 0x11;
   to_send->data[6] = 0x00;
   to_send->data[7] = 0x00;
+  }
+  else{
+    whl_spd = (((GET_BYTE(to_send, 0) & 0x3U) << 8) + GET_BYTE(to_send, 1));
+  }
 }
 
-// static void send_apa_signature(CANPacket_t *to_send){
-//   int crc;
-//   //to_fwd->RDHR &= 0x00FF0000;  //clear everything except counter
-//   to_send->data[4] = 0;
-//   to_send->data[6] = 0;
-//   to_send->data[7] = 0;
-//   crc = chrysler_compute_checksum(to_send);    
-//   //to_fwd->RDHR |= (((crc << 8) << 8) << 8);   //replace Checksum
-//   to_send->data[7] = crc;   //replace Checksum
-// };
 
 
 // ***************************** CAN *****************************

@@ -279,10 +279,6 @@ static int chrysler_fwd_hook(int bus_num, CANPacket_t *to_fwd) {
   if (bus_num == 0U){
     if ((addr == ESP_8) || (addr == ESP_8_RAM) || (addr == ESP_5) || (addr == ESP_5_RAM) || (addr == ESP_6) || (addr == WH_SPD)) {
       bus_fwd = 2;
-      // CANPacket_t to_send_mod;
-      // to_send_mod.data[6] = to_fwd->data[6];
-      // send_steer_enable_speed(&to_send_mod);
-      // can_send(&to_send_mod, 1, true);
     }
     else if (addr == Center_Stack_2_RAM){
       bus_fwd = 1;
