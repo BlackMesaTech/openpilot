@@ -121,7 +121,7 @@ void send_steer_enable_speed(CANPacket_t *to_send){
     to_send->data[7] = crc;   //replace Checksum
   }
   else{
-  veh_speed = (((GET_BYTE(to_send, 4) & 0x3U) << 8) + GET_BYTE(to_send, 5));
+  veh_speed = (((GET_BYTE(to_send, 4)) << 8) + GET_BYTE(to_send, 5));
   }
 }
 uint16_t wheelpulse;
@@ -148,8 +148,8 @@ static void send_esp_6_msg(CANPacket_t *to_send){
     to_send->data[7] = rear & 0xFF;
   }
   else{
-    front = (((GET_BYTE(to_send, 0) & 0x3U) << 8) + GET_BYTE(to_send, 1));
-    rear = (((GET_BYTE(to_send, 4) & 0x3U) << 8) + GET_BYTE(to_send, 5));
+    front = (((GET_BYTE(to_send, 0)) << 8) + GET_BYTE(to_send, 1));
+    rear = (((GET_BYTE(to_send, 4)) << 8) + GET_BYTE(to_send, 5));
   }
 }
 uint16_t whl_spd = 0;
@@ -165,7 +165,7 @@ static void send_whl_spd_msg(CANPacket_t *to_send){
   to_send->data[7] = 0x00;
   }
   else{
-    whl_spd = (((GET_BYTE(to_send, 0) & 0x3U) << 8) + GET_BYTE(to_send, 1));
+    whl_spd = (((GET_BYTE(to_send, 0)) << 8) + GET_BYTE(to_send, 1));
   }
 }
 
