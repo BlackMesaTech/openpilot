@@ -51,7 +51,7 @@ class CarState(CarStateBase):
     ret.genericToggle = bool(cp.vl["Steering_Column_Commands"]["High_Beam_Lever_Status"])
 
   # steering wheel  
-    ret.steeringAngleDeg = cp.vl["Steering_Column_Angle_Status"]["Steering_Wheel_Angle"]
+    ret.steeringAngleDeg = cp.vl["Steering_Column_Angle_Status"]["Steering_Wheel_Angle"] + 4
     ret.steeringRateDeg = cp.vl["Steering_Column_Angle_Status"]["Steering_Rate"]
     ret.steeringTorque = cp.vl["EPS_2"]["Steering_Column_Torque"]
     ret.steeringTorqueEps = cp.vl["EPS_2"]["EPS_Motor_Torque"]
